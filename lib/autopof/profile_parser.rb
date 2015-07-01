@@ -9,7 +9,9 @@ class ProfileParser
     Profile.new(
       interests: interests,
       bio: bio,
-      name: name
+      name: name,
+      likes: likes,
+      dislikes: dislikes
     )
   end
 
@@ -31,9 +33,15 @@ private
   end
 
   def likes
+    bio_parser.likes
   end
 
   def dislikes
+    bio_parser.dislikes
+  end
+
+  def bio_parser
+    @bio_parser ||= BioParser.new(bio)
   end
 
   def page

@@ -3,6 +3,8 @@ require "bundler/setup"
 
 require "nokogiri"
 require "pry"
+require "open-uri"
+require "pp"
 
 lib_dir = File.dirname(__FILE__) + "/autopof"
 require "#{lib_dir}/profile"

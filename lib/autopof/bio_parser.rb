@@ -7,7 +7,7 @@ class BioParser
 
   def likes
     list = []
-    bio.scan(/I (?:like|love to|love|enjoy).*.?(?:$|\Z)/mi) do |like_list|
+    bio.scan(/I (?:like|love to|love|enjoy).*?(?:[.!]|:\)|$|\Z)/mi) do |like_list|
       next_list = like_list.sub(/I (like|love to|love|enjoy)/mi, '').split(',')
       if next_list[-1].match(/and/i)
         next_list[-1] = next_list[-1].split(/and/i)
@@ -19,12 +19,21 @@ class BioParser
     cleanup_list(list)
   end
 
+  def dislikes
+    []
+  end
+
 private
   def cleanup_list(list)
     list.map do |item|
       item.strip.sub(/[[:punct:]]*$/, '')
     end
   end
+
+
+  #filter out joining commas:
+  #I enjoy going for walks with my springer spaniel on dartmoor, and would love someone to keep me company
+  #We only want the first conjunct
 
 
   #I enjoy spontaneous trips and adventures which would be more fun with an
