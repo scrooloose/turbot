@@ -1,0 +1,17 @@
+development:
+  adapter: 'mysql2'
+  user: 'root'
+  password: 'foobar'
+  database: 'autopof_dev'
+
+test:
+  adapter: 'mysql2'
+  user: 'root'
+  password: 'foobar'
+  database: 'autopof_test'
+
+prod:
+  adapter: 'mysql2'
+  user: 'root'
+  password: 'foobar'
+  database: 'autopof_prod'
