@@ -1,7 +1,10 @@
 class Profile
-  attr_reader :bio, :interests, :name, :likes, :dislikes
+  attr_reader :pof_key, :username, :bio, :interests, :name, :likes, :dislikes
 
-  def initialize(bio: nil, interests: nil, name: nil, likes: nil, dislikes: nil)
+  def initialize(pof_key: nil, username: nil, bio: nil, interests: nil,
+                 name: nil, likes: nil, dislikes: nil)
+    @pof_key = pof_key
+    @username = username
     @bio = bio
     @interests = interests
     @name = name

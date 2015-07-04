@@ -7,6 +7,8 @@ class ProfileParser
 
   def profile
     Profile.new(
+      pof_key: pof_key,
+      username: username,
       interests: interests,
       bio: bio,
       name: name,
@@ -30,6 +32,14 @@ private
   def name
     name = page.css('.AboutMe').inner_text.gsub(/About\s*/, '').strip
     (name == 'Me') ? nil : name
+  end
+
+  def pof_key
+    page.css('input[name="p_id"]').first.attr('value')
+  end
+
+  def username
+    page.css('input[name="sendto"]').first.attr('value')
   end
 
   def likes

@@ -37,5 +37,13 @@ RSpec.describe Profile do
     it "returns nil for name if not present on profile" do
       expect(test_parser(file: 'profile.html').profile.name).to be_nil
     end
+
+    it "populates 'pof_key'" do
+      expect(test_parser(file: 'profile.html').profile.pof_key).to eq("95213413")
+    end
+
+    it "populates 'username'" do
+      expect(test_parser(file: 'profile.html').profile.username).to eq("misshubble2")
+    end
   end
 end
