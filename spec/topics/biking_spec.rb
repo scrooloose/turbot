@@ -3,30 +3,20 @@ require File.dirname(__FILE__) + "/../spec_helper"
 RSpec.describe Topics::Biking do
 
   describe "#match?" do
-    def expect_match(*interests)
-      p = ProfileFactory.build(interests: interests)
-      expect(Topics::Biking.new(profile: p).match?).to be
-    end
-
-    def expect_no_match(*interests)
-      p = ProfileFactory.build(interests: interests)
-      expect(Topics::Biking.new(profile: p).match?).not_to be
-    end
-
     it "is true for profiles with biking interests" do
-      expect_match('biking')
-      expect_match('road biking')
-      expect_match('mountain biking')
-      expect_match('cycle touring')
-      expect_match('cycling')
-      expect_match('bike rides')
+      expect_topic_match(Topics::Biking, 'biking')
+      expect_topic_match(Topics::Biking, 'road biking')
+      expect_topic_match(Topics::Biking, 'mountain biking')
+      expect_topic_match(Topics::Biking, 'cycle touring')
+      expect_topic_match(Topics::Biking, 'cycling')
+      expect_topic_match(Topics::Biking, 'bike rides')
     end
 
     it "is false for profiles that mention motor biking" do
-      expect_no_match("motorbikes")
-      expect_no_match("motorbiking")
-      expect_no_match("motor bikes")
-      expect_no_match("motor biking")
+      expect_no_topic_match(Topics::Biking, "motorbikes")
+      expect_no_topic_match(Topics::Biking, "motorbiking")
+      expect_no_topic_match(Topics::Biking, "motor bikes")
+      expect_no_topic_match(Topics::Biking, "motor biking")
     end
   end
 end
