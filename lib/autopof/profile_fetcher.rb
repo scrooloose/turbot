@@ -54,15 +54,7 @@ private
     profile = parse_profile_for(page)
     return unless profile #if the page is screwed somehow
 
-    pof_key = profile.pof_key
-
-    if record = ProfileRecord[pof_key: pof_key]
-      Log.debug "ProfileFetcher#cache_profile - updating: #{pof_key}"
-      record.update(page_content: page.body)
-    else
-      Log.debug "ProfileFetcher#cache_profile - creating new: #{pof_key}"
-      ProfileRecord.create(page_content: page.body, pof_key: pof_key, username: profile.username)
-    end
+    ProfileRepository.instance.save(profile: profile, page_content: page.body)
   end
 
   def parse_profile_for(page)

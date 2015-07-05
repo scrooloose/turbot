@@ -33,9 +33,6 @@ private
   end
 
   def log_message
-    #TODO: make this not suck
-    profile_id = ProfileRecord[pof_key: profile.pof_key].id
-
-    MessageRecord.create(content: message, profile_id: profile_id)
+    MessageRepository.instance.save(profile: profile, message: message)
   end
 end

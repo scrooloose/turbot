@@ -23,14 +23,13 @@ DB = Sequel.connect(
   YAML.load_file("#{ROOT_DIR}/config/db.yml")[AUTOPOF_ENV.to_s]
 )
 
-
 Log = Logger.new("/tmp/autopof_log")
 
 Config = YAML.load_file("#{ROOT_DIR}/config/config.yml")
 
 lib_dir = File.dirname(__FILE__) + "/autopof"
-require "#{lib_dir}/orm/message_record"
-require "#{lib_dir}/orm/profile_record"
+require "#{lib_dir}/profile_repository"
+require "#{lib_dir}/message_repository"
 require "#{lib_dir}/profile_fetcher"
 require "#{lib_dir}/profile"
 require "#{lib_dir}/profile_parser"
