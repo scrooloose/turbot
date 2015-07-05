@@ -20,17 +20,14 @@ private
   end
 
   def body
-    topics.each do |t|
-      if t.match?
-        return t.message
+    Topics::Base.all_topics.each do |topic_class|
+      topic = topic_class.new(profile: profile)
+      if topic.match?
+        return topic.message
       end
     end
 
     raise "Could not build message. No topics matched"
-  end
-
-  def topics
-    @topics ||= [Topics::Biking.new(profile: profile)]
   end
 
   def signoff

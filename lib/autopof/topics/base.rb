@@ -12,6 +12,11 @@ class Topics::Base
   def message
   end
 
+  def self.all_topics
+    #TODO: probably do something more clever here
+    [Topics::Biking, Topics::Reading, Topics::Running]
+  end
+
 protected
   def has_interest_matching?(*regexs)
     regexs.detect do |regex|
