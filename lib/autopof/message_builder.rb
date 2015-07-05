@@ -1,4 +1,6 @@
 class MessageBuilder
+  class NoMatchingTopicError < StandardError; end
+
   attr_reader :profile
 
   def initialize(profile)
@@ -6,7 +8,7 @@ class MessageBuilder
   end
 
   def message
-    "#{greeting}\n#{body}\n#{signoff}"
+    "#{greeting} #{body}\n#{signoff}"
   end
 
 private
@@ -23,11 +25,11 @@ private
     Topics::Base.all_topics.each do |topic_class|
       topic = topic_class.new(profile: profile)
       if topic.match?
-        return topic.message
+        return topic.message.sub(/\n*$/, '')
       end
     end
 
-    raise "Could not build message. No topics matched"
+    raise(NoMatchingTopicError, "Could not build message. No topics matched")
   end
 
   def signoff
