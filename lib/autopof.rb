@@ -10,6 +10,8 @@ require "yaml"
 require "mechanize"
 require "logger"
 
+ROOT_DIR = File.dirname(__FILE__) + '/..'
+
 AUTOPOF_ENV = if ENV['AUTOPOF_ENV']
                 ENV['AUTOPOF_ENV'].to_sym
               else
@@ -18,12 +20,13 @@ AUTOPOF_ENV = if ENV['AUTOPOF_ENV']
 
 Sequel::Model.plugin :timestamps
 DB = Sequel.connect(
-  YAML.load_file(File.dirname(__FILE__) + "/../config/db.yml")[AUTOPOF_ENV.to_s]
+  YAML.load_file("#{ROOT_DIR}/config/db.yml")[AUTOPOF_ENV.to_s]
 )
 
 
 Log = Logger.new("/tmp/autopof_log")
 
+Config = YAML.load_file("#{ROOT_DIR}/config/config.yml")
 
 lib_dir = File.dirname(__FILE__) + "/autopof"
 require "#{lib_dir}/orm/profile_record"

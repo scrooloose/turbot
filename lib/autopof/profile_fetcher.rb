@@ -1,9 +1,7 @@
 class ProfileFetcher
-  attr_reader :username, :password, :num_pages
+  attr_reader :num_pages
 
-  def initialize(username: nil, password: nil, num_pages: 1)
-    @username = username
-    @password = password
+  def initialize(num_pages: 1)
     @num_pages = num_pages
   end
 
@@ -25,8 +23,8 @@ private
     Log.debug "ProfileFetcher#login"
     login_page = agent.get('http://www.pof.com')
     login_form = login_page.form('frmLogin')
-    login_form.username = username
-    login_form.password = password
+    login_form.username = Config['pof_username']
+    login_form.password = Config['pof_password']
     login_form.submit
   end
 

@@ -1,9 +1,7 @@
 class MessageSender
-  attr_reader :message, :profile, :username, :password
+  attr_reader :message, :profile
 
-  def initialize(username: nil, password: nil, message: nil, profile: nil)
-    @username = username
-    @password = password
+  def initialize(message: nil, profile: nil)
     @message = message
     @profile = profile
   end
@@ -22,8 +20,8 @@ private
   def login
     login_page = agent.get('http://www.pof.com')
     login_form = login_page.form('frmLogin')
-    login_form.username = username
-    login_form.password = password
+    login_form.username = Config['pof_username']
+    login_form.password = Config['pof_password']
     login_form.submit
   end
 
