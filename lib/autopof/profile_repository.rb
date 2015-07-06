@@ -1,6 +1,6 @@
 class ProfileRepository
   def self.instance
-    new
+    @instance ||= new
   end
 
   def save(profile: profile, page_content: page_content)

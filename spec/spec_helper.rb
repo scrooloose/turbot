@@ -1,3 +1,5 @@
+AUTOPOF_ENV='test'
+
 require File.dirname(__FILE__) + "/../lib/autopof"
 
 spec_dir = File.dirname(__FILE__)
