@@ -18,7 +18,7 @@ class Topics::Base
   end
 
   def match?(profile)
-    profile.has_interest_matching?(interest_matchers)
+    profile.has_interest_matching?(*self.class.interest_matchers)
   end
 
   def message(profile)
