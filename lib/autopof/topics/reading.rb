@@ -1,6 +1,6 @@
 class Topics::Reading < Topics::Base
-  def match?
-    has_interest_matching?(/books|reading/i)
+  def self.interest_matchers
+    [/books|reading/i]
   end
 
   def message

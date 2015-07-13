@@ -12,8 +12,6 @@ class ProfileParser
       interests: interests,
       bio: bio,
       name: name,
-      likes: likes,
-      dislikes: dislikes
     )
   end
 
@@ -40,14 +38,6 @@ private
 
   def username
     page.css('input[name="sendto"]').first.attr('value')
-  end
-
-  def likes
-    bio_parser.likes
-  end
-
-  def dislikes
-    bio_parser.dislikes
   end
 
   def bio_parser

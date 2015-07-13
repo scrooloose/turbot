@@ -23,9 +23,9 @@ private
 
   def body
     Topics::Base.all_topics.each do |topic_class|
-      topic = topic_class.new(profile: profile)
-      if topic.match?
-        return topic.message.sub(/\n*$/, '')
+      topic = topic_class.new
+      if topic.match?(profile)
+        return topic.message(profile).sub(/\n*$/, '')
       end
     end
 

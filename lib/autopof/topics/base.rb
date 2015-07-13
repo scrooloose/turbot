@@ -1,28 +1,28 @@
 module Topics; end
 
 class Topics::Base
-  attr_reader :profile
-  def initialize(profile: profile)
-    @profile = profile
-  end
-
-  def match?
-  end
-
-  def message
-  end
-
   def self.all_topics
-    #TODO: probably do something more clever here
+    #TODO: Probably do something more clever here.
+    #NOTE: The order is important as the first match will be messaged
     [Topics::Biking, Topics::Reading, Topics::Running]
   end
 
-protected
-  def has_interest_matching?(*regexs)
-    regexs.detect do |regex|
-      if profile.interests.detect {|i| i =~ regex}
-        return true
-      end
+  def self.all_interest_matchers
+    all_topics.inject([]) do |all_matchers,topic|
+      all_matchers.push(*topic.interest_matchers)
     end
   end
+
+  def self.interest_matchers
+    raise("Not implemented")
+  end
+
+  def match?(profile)
+    profile.has_interest_matching?(interest_matchers)
+  end
+
+  def message(profile)
+    raise("Not implemented")
+  end
+
 end

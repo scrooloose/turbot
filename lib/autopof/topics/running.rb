@@ -1,9 +1,9 @@
 class Topics::Running < Topics::Base
-  def match?
-    has_interest_matching?(/running/i)
+  def self.interest_matchers
+    [/running/i]
   end
 
-  def message
+  def message(profile)
 <<-EOS
 I also like running. Are you signed up for any upcoming events? I'm running the Bristol half marathon this year (finally!).
 EOS

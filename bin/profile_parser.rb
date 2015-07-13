@@ -12,7 +12,3 @@ puts "\nInterests\n-------------"
 pp profile.interests
 puts "\nBio\n-------------"
 pp profile.bio
-puts "\nLikes\n-------------"
-pp profile.likes
-puts "\nDislikes\n-------------"
-pp profile.dislikes
