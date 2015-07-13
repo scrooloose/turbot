@@ -16,6 +16,8 @@ RSpec.describe MessageBuilder do
       test_likes(bio: "Really enjoy watching live biking and making pancakes.", interests: ['biking'])
       test_likes(bio: "In terms of hobbies, I enjoy biking and until recently played in a ladies darts team.", interests: ['biking'])
       test_likes(bio: "This girl loves positivity, biking, cheekiness, kisses, theatre and live performance. ", interests: ['biking'])
+      test_likes(bio: "In my spare time I like to do the usual watch films and biking", interests: ['biking'])
+
     end
 
     it "doesn't recognize anti-interests" do
