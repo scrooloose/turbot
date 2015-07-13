@@ -4,7 +4,7 @@ class Topics::Base
   def self.all_topics
     #TODO: Probably do something more clever here.
     #NOTE: The order is important as the first match will be messaged
-    [Topics::Biking, Topics::Reading, Topics::Running]
+    [Topics::Biking, Topics::Reading, Topics::Cooking, Topics::Running]
   end
 
   def self.all_interest_matchers
