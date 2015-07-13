@@ -26,7 +26,8 @@ private
 
   def like_sentences
     @sentences ||= bio.split(/[\n.]/).select do |s|
-      s.match(/I (like|love|enjoy|am happiest|am happy)/im)
+      #match up to 4 words, then one of the key "like" indication phrases
+      s.match(/(.*?\s){0,4}(like|loves?|enjoy|am happiest|am happy|hobbies|passion|really into)/im)
     end
   end
 end
