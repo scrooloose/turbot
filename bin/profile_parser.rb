@@ -16,3 +16,6 @@ pp BioParser.new(bio: profile.bio, interest_matchers: Topics::Base.all_interest_
 
 puts "\nBio\n-------------"
 pp profile.bio
+
+puts "\nMessage\n-------------"
+puts MessageBuilder.new(profile).message
