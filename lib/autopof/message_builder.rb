@@ -15,9 +15,9 @@ private
 
   def greeting
     if profile.name
-      "Hi #{profile.name.capitalize},"
+      "How's it going #{profile.name.capitalize}?"
     else
-      "Hi there!"
+      "How's it going?"
     end
   end
 
