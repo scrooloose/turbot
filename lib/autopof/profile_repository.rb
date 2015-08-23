@@ -19,7 +19,12 @@ class ProfileRepository
   end
 
   def messagable_profiles
-    records = DB[:profiles].where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)")
+    #FIXME: we are currently grabbing 100 profiles... it is possible that none
+    #of these will be messagable so we should have a smarter way to fetch
+    #profiles... possibly fetch, parse and check for messagability here?
+    #
+    #FIXME: this subquery is inefficent - change to a join
+    records = DB[:profiles].where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id) limit 100")
     records.map do |record|
       ProfileParser.new(page_content: record[:page_content]).profile rescue nil
     end.compact
