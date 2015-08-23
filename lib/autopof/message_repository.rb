@@ -1,5 +1,5 @@
 class MessageRepository
-  def instance
+  def self.instance
     @instance ||= new
   end
 
