@@ -24,7 +24,7 @@ class ProfileRepository
     #profiles... possibly fetch, parse and check for messagability here?
     #
     #FIXME: this subquery is inefficent - change to a join
-    records = DB[:profiles].where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id) limit 100")
+    records = DB[:profiles].where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)").limit(100)
     records.map do |record|
       ProfileParser.new(page_content: record[:page_content]).profile rescue nil
     end.compact
