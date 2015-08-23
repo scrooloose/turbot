@@ -33,6 +33,6 @@ private
   end
 
   def signoff
-    "Martin"
+    Config['name']
   end
 end
