@@ -3,7 +3,7 @@ class MessageRepository
     @instance ||= new
   end
 
-  def save(profile: profile, message: message)
+  def save(profile: nil, message: nil)
     #TODO: make this not suck
     profile_id = ProfileRepository.instance.find(pof_key: profile.pof_key).id
 

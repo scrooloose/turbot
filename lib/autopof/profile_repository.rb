@@ -3,7 +3,7 @@ class ProfileRepository
     @instance ||= new
   end
 
-  def save(profile: profile, page_content: page_content)
+  def save(profile: nil, page_content: nil)
     pof_user = profile.username
     if record = DB[:profiles][pof_key: profile.pof_key]
       Log.debug "ProfileFetcher#cache_profile - updating: #{pof_user}"
