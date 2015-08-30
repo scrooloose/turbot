@@ -24,6 +24,8 @@ private
   end
 
   def bio
+    #preserve newlines - since <br>s are stripped out
+    page.css('.profile-description br').each {|br| br.replace("\n")}
     page.css('.profile-description').inner_text.strip
   end
 

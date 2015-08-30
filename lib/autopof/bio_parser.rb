@@ -25,7 +25,8 @@ class BioParser
 private
 
   def like_sentences
-    @sentences ||= bio.split(/[\n.]/).select do |s|
+    @sentences ||= bio.split(/[\n.!]/).select do |s|
+      Log.debug "like_sentences: processing sentence: #{s}"
       #match up to 4 words, then one of the key "like" indication phrases
       s.match(/(.*?\s){0,4}(like|loves?|enjoy|am happiest|am happy|hobbies|passion|really into|spare time)/im)
     end
