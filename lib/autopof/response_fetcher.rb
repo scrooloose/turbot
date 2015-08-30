@@ -26,6 +26,11 @@ class ResponseFetcher
         record_response(username, link)
       end
     end
+
+    if next_page_link = inbox_page.search('#inbox-message-footer-pagination a').first
+      next_page = agent.get("http://www.pof.com/#{next_page_link['href']}")
+      check_for_responses(next_page)
+    end
   end
 
   def waiting_for_response_from?(username)
@@ -39,7 +44,6 @@ class ResponseFetcher
     resp_date = parse_msg_date(resp_page.search('.msg-row div:first-of-type').first.text)
     resp_text = resp_page.search('.msg-row .message-content').last.text
     DB[:messages].where(id: message[:id]).update(response: resp_text, responded_at: resp_date)
-    goto_inbox
   end
 
   def parse_msg_date(str)
