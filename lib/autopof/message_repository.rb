@@ -3,6 +3,10 @@ class MessageRepository
     @instance ||= new
   end
 
+  def messages_awaiting_response_for(username)
+    DB[:messages].join(:profiles, id: :profile_id).where(profiles__username: username).where(response: nil)
+  end
+
   def save(profile: nil, message: nil)
     #TODO: make this not suck
     profile_id = ProfileRepository.instance.find(pof_key: profile.pof_key)[:id]
