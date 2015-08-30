@@ -7,6 +7,7 @@ class MessageSender
   end
 
   def run
+    Log.debug "Sending message to #{profile.username}"
     login
     send_message
     log_message
@@ -18,6 +19,7 @@ private
   end
 
   def login
+    Log.debug "Logging in"
     login_page = agent.get('http://www.pof.com')
     login_form = login_page.form('frmLogin')
     login_form.username = Config['pof_username']
