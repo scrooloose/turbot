@@ -2,7 +2,7 @@ require "rubygems"
 require "bundler/setup"
 
 require "nokogiri"
-require "pry"
+require "byebug"
 require "open-uri"
 require "pp"
 require "sequel"
