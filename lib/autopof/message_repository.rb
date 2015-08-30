@@ -4,7 +4,7 @@ class MessageRepository
   end
 
   def messages_awaiting_response_for(username)
-    DB[:messages].join(:profiles, id: :profile_id).where(profiles__username: username).where(response: nil)
+    DB[:messages].join(:profiles, id: :profile_id).where(profiles__username: username).where(response: nil).select(Sequel.lit('messages.*'))
   end
 
   def save(profile: nil, message: nil)

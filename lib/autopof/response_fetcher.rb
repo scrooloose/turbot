@@ -43,7 +43,7 @@ class ResponseFetcher
   end
 
   def parse_msg_date(str)
-    DateTime.strptime(str, "%m/%d/%Y %H:%M:%S %p")
+    DateTime.strptime(str, "%m/%d/%Y %H:%M:%S %p").strftime("%F %T")
   end
 end
 
