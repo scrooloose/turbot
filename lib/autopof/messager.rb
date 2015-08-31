@@ -16,6 +16,8 @@ class Messager
         Log.debug("Messenger#go - Sending message to #{profile.username}. Message: #{msg_text}")
         webdriver.send_message(message: msg_text, profile: profile) unless dry_run
         messages_sent += 1
+      else
+        Log.debug("Messenger#go - Could not send a message to #{profile.username}.")
       end
 
       break if messages_sent >= message_limit
