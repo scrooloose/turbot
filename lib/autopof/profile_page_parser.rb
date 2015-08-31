@@ -1,21 +1,9 @@
-class ProfileParser
+class ProfilePageParser
   attr_reader :page_content
 
   def initialize(page_content: nil)
     @page_content = page_content
   end
-
-  def profile
-    Profile.new(
-      pof_key: pof_key,
-      username: username,
-      interests: interests,
-      bio: bio,
-      name: name,
-    )
-  end
-
-private
 
   def interests
     Log.info "#{self.class.name}: parsing interests"
@@ -51,6 +39,8 @@ private
     Log.info "#{self.class.name}: parsing bio_parser"
     @bio_parser ||= BioParser.new(bio)
   end
+
+private
 
   def page
     @page ||= Nokogiri.HTML(page_content)

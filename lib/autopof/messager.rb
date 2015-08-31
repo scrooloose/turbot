@@ -8,7 +8,7 @@ class Messager
   end
 
   def go
-    profiles = ProfileRepository.instance.messagable_profiles
+    profiles = Profile.messagable
 
     messages_sent = 0
     profiles.each do |profile|

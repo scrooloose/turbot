@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + "/spec_helper"
 RSpec.describe Messager do
   context "when dry_run is true" do
     it "doesn't send messages" do
-      expect(ProfileRepository.instance).to receive(:messagable_profiles).and_return(
+      expect(Profile).to receive(:messagable).and_return(
         [ProfileFactory.build_messagable]
       )
       wd = PofWebdriver::Base.new
@@ -15,7 +15,7 @@ RSpec.describe Messager do
 
   context "when dry_run is false" do
     it "sends messages" do
-      expect(ProfileRepository.instance).to receive(:messagable_profiles).and_return(
+      expect(Profile).to receive(:messagable).and_return(
         [ProfileFactory.build_messagable]
       )
       wd = PofWebdriver::Base.new
@@ -26,7 +26,7 @@ RSpec.describe Messager do
   end
 
   it "respects the 'message_limit' param" do
-    expect(ProfileRepository.instance).to receive(:messagable_profiles).and_return(
+    expect(Profile).to receive(:messagable).and_return(
       (1..3).map { ProfileFactory.build_messagable }
     )
     wd = PofWebdriver::Base.new
