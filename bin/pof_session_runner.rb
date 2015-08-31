@@ -34,7 +34,7 @@ private
   end
 
   def check_for_responses_to_messages
-    @wd.check_responses
+    @wd.check_for_responses_to_messages
   end
 end
 
