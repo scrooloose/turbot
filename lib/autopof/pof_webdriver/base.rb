@@ -13,8 +13,11 @@ class PofWebdriver::Base
 protected
 
   def login
+    return visit('') if @logged_in
+    @logged_in ||= true
+
     Log.debug "#{self.class.name}: Logging in"
-    login_page = agent.get('http://www.pof.com')
+    login_page = visit('')
     login_form = login_page.form('frmLogin')
     login_form.username = Config['pof_username']
     login_form.password = Config['pof_password']
