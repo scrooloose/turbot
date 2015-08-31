@@ -28,7 +28,7 @@ Log = Logger.new("/tmp/autopof_log")
 Config = YAML.load_file("#{ROOT_DIR}/config/config.yml")
 
 lib_dir = File.dirname(__FILE__) + "/autopof"
-require "#{lib_dir}/message_repository"
+require "#{lib_dir}/entities/message"
 require "#{lib_dir}/entities/profile"
 require "#{lib_dir}/profile_page_parser"
 require "#{lib_dir}/bio_parser"

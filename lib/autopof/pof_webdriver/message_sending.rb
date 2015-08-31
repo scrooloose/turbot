@@ -8,6 +8,6 @@ module PofWebdriver::MessageSending
     msgform.message = message
     msgform.submit
 
-    MessageRepository.instance.save(profile: profile, message: message)
+    Message.create(profile_id: profile.id, content: message)
   end
 end

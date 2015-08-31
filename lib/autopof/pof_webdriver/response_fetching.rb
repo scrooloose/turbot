@@ -30,12 +30,12 @@ private
   end
 
   def waiting_for_response_from?(username)
-    MessageRepository.instance.messages_awaiting_response_for(username).any?
+    Message.messages_awaiting_response_for(username).any?
   end
 
   def record_response(username, link)
     Log.debug "#{self.class.name}: record_response(username: #{username})"
-    message = MessageRepository.instance.messages_awaiting_response_for(username).first
+    message = Message.messages_awaiting_response_for(username).first
     resp_page = visit(link['href'])
     resp_date = parse_msg_date(resp_page.search('.msg-row div:first-of-type').first.text)
     resp_text = resp_page.search('.msg-row .message-content').last.text
