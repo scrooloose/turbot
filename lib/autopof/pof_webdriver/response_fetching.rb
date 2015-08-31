@@ -7,17 +7,17 @@ module PofWebdriver::ResponseFetching
 
 private
   def goto_inbox
-    Log.debug "#{self.class.name}: goto_inbox"
+    Log.info "#{self.class.name}: goto_inbox"
     visit("inbox.aspx")
   end
 
   def check_for_responses(inbox_page)
-    Log.debug "#{self.class.name}: check_for_responses"
+    Log.info "#{self.class.name}: check_for_responses"
     response_links = inbox_page.search("//a[contains(@id, 'inbox-readmessage-link-')]")
 
     response_links.each do |link|
       username = link.search('.inbox-message-user-name').text.strip.split.first
-      Log.debug "#{self.class.name}: processing message from #{username}"
+      Log.info "#{self.class.name}: processing message from #{username}"
       if waiting_for_response_from?(username)
         record_response(username, link)
       end
@@ -34,7 +34,7 @@ private
   end
 
   def record_response(username, link)
-    Log.debug "#{self.class.name}: record_response(username: #{username})"
+    Log.info "#{self.class.name}: record_response(username: #{username})"
     message = Message.messages_awaiting_response_for(username).first
     resp_page = visit(link['href'])
     resp_date = parse_msg_date(resp_page.search('.msg-row div:first-of-type').first.text)

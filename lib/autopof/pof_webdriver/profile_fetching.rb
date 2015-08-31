@@ -21,7 +21,7 @@ private
   end
 
   def cache_profiles(page)
-    Log.debug "#{self.class.name} - caching for: #{page.uri.to_s}"
+    Log.info "#{self.class.name} - caching for: #{page.uri.to_s}"
     profile_links = page.links_with(href: /^viewprofile.*/, class: 'link')
     profile_links.each do |link|
 
@@ -34,7 +34,7 @@ private
   end
 
   def cache_profile(page)
-    Log.debug "#{self.class.name} - caching: #{page.uri.to_s}"
+    Log.info "#{self.class.name} - caching: #{page.uri.to_s}"
 
     profile = parse_profile_for(page)
     return unless profile #if the page is screwed somehow

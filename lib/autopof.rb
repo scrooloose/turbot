@@ -25,6 +25,7 @@ DB = Sequel.connect(
 )
 
 Log = Logger.new("#{ROOT_DIR}/log/#{AUTOPOF_ENV}.log")
+Log.level = Logger::INFO
 
 Config = YAML.load_file("#{ROOT_DIR}/config/config.yml")
 

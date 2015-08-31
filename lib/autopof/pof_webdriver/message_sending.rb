@@ -1,6 +1,6 @@
 module PofWebdriver::MessageSending
   def send_message(message: nil, profile: nil)
-    Log.debug "Sending message to #{profile.username}"
+    Log.info "Sending message to #{profile.username}"
     login
 
     profile_page = visit("viewprofile.aspx?sld=1&profile_id=#{profile.pof_key}")

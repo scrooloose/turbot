@@ -13,11 +13,11 @@ class Messager
     messages_sent = 0
     profiles.each do |profile|
       if msg_text = message_text_for(profile)
-        Log.debug("Messenger#go - Sending message to #{profile.username}. Message: #{msg_text}")
+        Log.info("Messenger#go - Sending message to #{profile.username}. Message: #{msg_text}")
         webdriver.send_message(message: msg_text, profile: profile) unless dry_run
         messages_sent += 1
       else
-        Log.debug("Messenger#go - Could not send a message to #{profile.username}.")
+        Log.info("Messenger#go - Could not send a message to #{profile.username}.")
       end
 
       break if messages_sent >= message_limit

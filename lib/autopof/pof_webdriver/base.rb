@@ -16,7 +16,7 @@ protected
     return visit('') if @logged_in
     @logged_in ||= true
 
-    Log.debug "#{self.class.name}: Logging in"
+    Log.info "#{self.class.name}: Logging in"
     login_page = visit('')
     login_form = login_page.form('frmLogin')
     login_form.username = Config['pof_username']
