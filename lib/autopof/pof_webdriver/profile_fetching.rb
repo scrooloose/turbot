@@ -36,16 +36,15 @@ private
   def cache_profile(page)
     Log.info "#{self.class.name} - caching: #{page.uri.to_s}"
 
-    profile = parse_profile_for(page)
-    return unless profile #if the page is screwed somehow
+    parser = ProfilePageParser.new(page_content: page.body)
 
-    ProfileRepository.instance.save(profile: profile, page_content: page.body)
-  end
-
-  def parse_profile_for(page)
-    ProfileParser.new(page_content: page.body).profile
-  rescue
-    nil
+    profile = if Profile.where(pof_key: parser.pof_key).any?
+                Profile.find(pof_key: parser.pof_key)
+              else
+                Profile.new(username: parser.username, pof_key: parser.pof_key)
+              end
+    profile.page_content = page.body
+    profile.save
   end
 
 end
