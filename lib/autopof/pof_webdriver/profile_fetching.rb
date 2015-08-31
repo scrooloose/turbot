@@ -9,7 +9,7 @@ private
     post_login_page.link_with(text: 'search').click
   end
 
-  def cache_search_pages(page_one, num_pages: num_pages)
+  def cache_search_pages(page_one, num_pages: nil)
     current_page = page_one
 
     1.upto(num_pages) do |p_num|
