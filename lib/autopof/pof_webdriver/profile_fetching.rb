@@ -24,6 +24,10 @@ private
     Log.debug "#{self.class.name} - caching for: #{page.uri.to_s}"
     profile_links = page.links_with(href: /^viewprofile.*/, class: 'link')
     profile_links.each do |link|
+
+      #cache half of the profiles on the page so we appear less like a bot
+      next if rand(2) == 0
+
       cache_profile(link.click)
       sleep(rand(5))
     end
