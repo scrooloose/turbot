@@ -12,8 +12,12 @@ class PofSession
     cache_profiles
     send_some_messages
   rescue Exception => e
-    body = e.backtrace.join("\n")
-    Pony.mail(to: Config['admin_email'], from: Config['admin_email'], subject: 'Pofbot Error', body: body)
+    if AUTOPOF_ENV == "production"
+      body = e.message + "\n" + e.backtrace.join("\n")
+      Pony.mail(to: Config['admin_email'], from: Config['admin_email'], subject: 'Pofbot Error', body: body)
+    else
+      raise e
+    end
   end
 
 private
