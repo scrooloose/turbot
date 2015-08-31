@@ -7,5 +7,5 @@ dry_run = if ENV['dry_run']
             true
           end
 
-Messager.new(dry_run: dry_run, message_limit: msg_limit).go
+Messager.new(dry_run: dry_run, message_limit: msg_limit, webdriver: PofWebdriver::Base.new).go
 

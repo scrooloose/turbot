@@ -6,8 +6,9 @@ RSpec.describe Messager do
       expect(ProfileRepository.instance).to receive(:messagable_profiles).and_return(
         [ProfileFactory.build_messagable]
       )
+      wd = PofWebdriver::Base.new
       m = Messager.new(dry_run: true)
-      expect(MessageSender).to_not receive(:new)
+      expect(wd).to_not receive(:send_message)
       m.go
     end
   end
@@ -17,8 +18,9 @@ RSpec.describe Messager do
       expect(ProfileRepository.instance).to receive(:messagable_profiles).and_return(
         [ProfileFactory.build_messagable]
       )
-      m = Messager.new(dry_run: false)
-      expect(MessageSender).to receive(:new).and_return(double(run: nil))
+      wd = PofWebdriver::Base.new
+      m = Messager.new(dry_run: false, webdriver: wd)
+      expect(wd).to receive(:send_message).and_return(true)
       m.go
     end
   end
@@ -27,9 +29,9 @@ RSpec.describe Messager do
     expect(ProfileRepository.instance).to receive(:messagable_profiles).and_return(
       (1..3).map { ProfileFactory.build_messagable }
     )
-    m = Messager.new(dry_run: false, message_limit: 2)
-    expect(MessageSender).to receive(:new).twice.and_return(double(run: nil))
+    wd = PofWebdriver::Base.new
+    m = Messager.new(dry_run: false, message_limit: 2, webdriver: wd)
+    expect(wd).to receive(:send_message).twice.and_return(true)
     m.go
   end
-
 end
