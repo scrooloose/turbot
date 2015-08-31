@@ -7,6 +7,17 @@ class PofSession
     @wd = PofWebdriver::Base.new
   end
 
+  def run
+    check_for_responses_to_messages
+    cache_profiles
+    send_some_messages
+  rescue Exception => e
+    body = e.backtrace.join("\n")
+    Pony.mail(to: Config['admin_email'], from: Config['admin_email'], subject: 'Pofbot Error', body: body)
+  end
+
+private
+
   def cache_profiles
     pages = ENV['pages'] ? ENV['pages'].to_i : 3
     @wd.cache_profiles_from_search_page(num_pages: pages)
@@ -27,7 +38,4 @@ class PofSession
   end
 end
 
-session = PofSession.new
-session.check_for_responses_to_messages
-session.cache_profiles
-session.send_some_messages
+PofSession.new.run

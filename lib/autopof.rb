@@ -9,6 +9,7 @@ require "sequel"
 require "yaml"
 require "mechanize"
 require "logger"
+require "pony"
 
 ROOT_DIR = File.dirname(__FILE__) + '/..'
 
