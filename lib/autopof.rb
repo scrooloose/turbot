@@ -10,14 +10,15 @@ require "yaml"
 require "mechanize"
 require "logger"
 require "pony"
+require "securerandom"
 
 ROOT_DIR = File.dirname(__FILE__) + '/..'
 
-AUTOPOF_ENV = if ENV['AUTOPOF_ENV']
-                ENV['AUTOPOF_ENV'].to_sym
-              else
-                :development
-              end
+AUTOPOF_ENV ||= if ENV['AUTOPOF_ENV']
+                  ENV['AUTOPOF_ENV'].to_sym
+                else
+                  :development
+                end
 
 Sequel::Model.plugin :timestamps
 DB = Sequel.connect(
