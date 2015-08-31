@@ -5,14 +5,14 @@ RSpec.describe ProfilePageParser do
     ProfilePageParser.new(page_content: File.read(test_file_path(file)))
   end
 
-  it "populates the interests - all downcased" do
+  it "parses the interests - all downcased" do
     expected = ['the outdoors', 'wine', 'cheese', 'laughter', 'hiking',
                 'camping', 'music', 'log fires', 'adventures', 'ale']
 
     expect(test_parser.interests.to_set).to eq(expected.to_set)
   end
 
-  it "populates the bio" do
+  it "parses the bio" do
     desc = test_parser.bio
     expected = <<-STR
       I'm adventurous and like to be spontaneous when I can be. I like to
@@ -29,7 +29,7 @@ RSpec.describe ProfilePageParser do
     expect(desc.gsub(/\s/, '')).to eq(expected.gsub(/\s/, ''))
   end
 
-  it "populates name if present on profile" do
+  it "parses name if present on profile" do
     expect(test_parser(file: 'profile2.html').name).to eq('Emma')
   end
 
@@ -37,11 +37,11 @@ RSpec.describe ProfilePageParser do
     expect(test_parser(file: 'profile.html').name).to be_nil
   end
 
-  it "populates 'pof_key'" do
+  it "parses 'pof_key'" do
     expect(test_parser(file: 'profile.html').pof_key).to eq("95213413")
   end
 
-  it "populates 'username'" do
+  it "parses 'username'" do
     expect(test_parser(file: 'profile.html').username).to eq("misshubble2")
   end
 end
