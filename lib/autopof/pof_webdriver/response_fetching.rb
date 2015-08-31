@@ -20,6 +20,7 @@ private
       Log.info "#{self.class.name}: processing message from #{username}"
       if waiting_for_response_from?(username)
         record_response(username, link)
+        sleep(rand(5))
       end
     end
 
