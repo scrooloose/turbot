@@ -2,3 +2,4 @@ config/db.yml
 config/config.yml
 tags
 *~
+log/*.log
