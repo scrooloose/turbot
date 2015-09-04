@@ -1,12 +1,12 @@
 class Profile < Sequel::Model(:profiles)
 
   def self.messagable
-    #FIXME: we are currently grabbing 100 profiles... it is possible that none
+    #FIXME: we are currently grabbing 200 profiles... it is possible that none
     #of these will be messagable so we should have a smarter way to fetch
     #profiles... possibly fetch, parse and check for messagability here?
     #
     #FIXME: this subquery is inefficent - change to a join
-    Profile.where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)").limit(100).order('RAND()')
+    Profile.where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)").limit(200).order('RAND()')
   end
 
 
