@@ -8,6 +8,7 @@ require "pp"
 require "sequel"
 require "yaml"
 require "mechanize"
+require "nokogiri"
 require "logger"
 require "pony"
 require "securerandom"
@@ -24,6 +25,7 @@ Sequel::Model.plugin :timestamps
 DB = Sequel.connect(
   YAML.load_file("#{ROOT_DIR}/config/db.yml")[AUTOPOF_ENV.to_s]
 )
+DB.extension(:pagination)
 
 Log = Logger.new("#{ROOT_DIR}/log/#{AUTOPOF_ENV}.log")
 Log.level = Logger::INFO

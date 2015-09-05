@@ -8,27 +8,11 @@ class Messager
   end
 
   def go
-    profiles = Profile.messagable
-
-    messages_sent = 0
-    profiles.each do |profile|
-      if msg_text = message_text_for(profile)
-        Log.info("Messenger#go - Sending message to #{profile.username}. Message: #{msg_text}")
-        webdriver.send_message(message: msg_text, profile: profile) unless dry_run
-        messages_sent += 1
-      else
-        Log.info("Messenger#go - Could not send a message to #{profile.username}.")
-      end
-
-      break if messages_sent >= message_limit
+    Profile.messagable(message_limit).each do |profile|
+      msg_text = MessageBuilder.new(profile).message
+      Log.info("Messenger#go - Sending message to #{profile.username}. Message: #{msg_text}")
+      webdriver.send_message(message: msg_text, profile: profile) unless dry_run
     end
-  end
-
-private
-  def message_text_for(profile)
-    MessageBuilder.new(profile).message
-  rescue MessageBuilder::NoMatchingTopicError
-    nil
   end
 end
 

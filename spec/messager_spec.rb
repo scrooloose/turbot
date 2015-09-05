@@ -26,9 +26,10 @@ RSpec.describe Messager do
   end
 
   it "respects the 'message_limit' param" do
-    expect(Profile).to receive(:messagable).and_return(
-      (1..3).map { ProfileFactory.build_messagable }
-    )
+    ProfileFactory.create_messagable
+    ProfileFactory.create_messagable
+    ProfileFactory.create_messagable
+
     wd = PofWebdriver::Base.new
     m = Messager.new(dry_run: false, message_limit: 2, webdriver: wd)
     expect(wd).to receive(:send_message).twice.and_return(true)

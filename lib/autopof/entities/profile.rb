@@ -1,14 +1,17 @@
 class Profile < Sequel::Model(:profiles)
+  class NotEnoughMessagableProfiles < StandardError; end
 
-  def self.messagable
-    #FIXME: we are currently grabbing 200 profiles... it is possible that none
-    #of these will be messagable so we should have a smarter way to fetch
-    #profiles... possibly fetch, parse and check for messagability here?
-    #
-    #FIXME: this subquery is inefficent - change to a join
-    Profile.where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)").limit(200).order('RAND()')
+  def self.messagable(number)
+    rv = []
+    Profile.where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)").order('RAND()').each_page(100) do |page|
+      page.each do |profile|
+        rv << profile if profile.matches_any_topic?
+        return rv if rv.size == number
+      end
+    end
+
+    raise(NotEnoughMessagableProfiles, "Couldn't find #{number} messagable profiles")
   end
-
 
   #TODO: these should all be readonly, but are read/write for easier testing
   attr_writer :bio, :name, :interests
@@ -28,9 +31,10 @@ class Profile < Sequel::Model(:profiles)
     end
   end
 
-  #FIXME: this is a hack that is used in the profile factory...
-  def skip_parsing_page_content
-    @parse_page_contents_done = true
+  def matches_any_topic?
+    MessageBuilder.new(self).message && true
+  rescue MessageBuilder::NoMatchingTopicError
+    nil
   end
 
 private

@@ -1,14 +1,14 @@
 module ProfileFactory
   def self.build(params = {})
-    _build({ bio: "The bio", interests: [], pof_key: SecureRandom.hex, username: SecureRandom.hex }.merge(params))
+    _build(default_params.merge(params))
   end
 
   def self.create(params = {})
-    build.save
+    build(params).save
   end
 
   def self.from_test_fixture(fname)
-    content = File.read(File.join(ROOT_DIR, 'spec', 'test_files', fname))
+    content = File.read(test_file_path(fname))
     parser = ProfilePageParser.new(page_content: content)
     Profile.create(
       username: parser.username,
@@ -18,7 +18,7 @@ module ProfileFactory
   end
 
   def self.build_messagable(params = {})
-    _build({ bio: "The bio", interests: ['biking'] }.merge(params))
+    _build(default_params.merge(interests: ['biking']).merge(params))
   end
 
   def self.create_messagable(params = {})
@@ -26,9 +26,29 @@ module ProfileFactory
   end
 
 private
+  def self.default_params
+    { bio: "The bio", interests: [], pof_key: SecureRandom.hex, username: SecureRandom.hex }
+  end
+
   def self._build(params)
-    p = Profile.new(params)
-    p.skip_parsing_page_content
-    p
+    p = params.clone
+    p.delete(:interests)
+    p.delete(:bio)
+    Profile.new(p.merge(page_content: page_content_for(params)))
+  end
+
+  def self.page_content_for(params)
+    page = Nokogiri.HTML(File.read(test_file_path('base.html')))
+
+    params[:interests].each do |interest|
+      new_interest = %Q(<li class="text-lg"><a href="/interests/#{interest}">#{interest}</a></li>)
+      page.at_css('#profile-interests-wrapper .nav') << new_interest
+    end
+
+    page.at_css('.profile-description').content = params[:bio]
+
+    page_content = page.to_html
+    page_content.gsub!(/POF_KEY_HERE/, params[:pof_key])
+    page_content.gsub!(/POF_USERNAME_HERE/, params[:username])
   end
 end
