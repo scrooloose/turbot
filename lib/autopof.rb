@@ -45,4 +45,4 @@ require "#{lib_dir}/topic"
 require "#{lib_dir}/topic_registry"
 
 TopicRegistryInstance = TopicRegistry.new
-TopicRegistryInstance.add_from_file("#{ROOT_DIR}/config/config.yml")
+TopicRegistryInstance.add_from_file("#{ROOT_DIR}/config/config.yml") unless AUTOPOF_ENV == :test
