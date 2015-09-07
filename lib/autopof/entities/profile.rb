@@ -3,7 +3,7 @@ class Profile < Sequel::Model(:profiles)
 
   def self.messagable(number)
     rv = []
-    Profile.where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)").order('RAND()').each_page(100) do |page|
+    Profile.where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)").order(Sequel.lit('RAND()')).each_page(100) do |page|
       page.each do |profile|
         rv << profile if profile.matches_any_topic?
         return rv if rv.size == number
