@@ -39,12 +39,10 @@ require "#{lib_dir}/profile_page_parser"
 require "#{lib_dir}/bio_parser"
 require "#{lib_dir}/message_builder"
 require "#{lib_dir}/messager"
-
-require "#{lib_dir}/topics/base"
-require "#{lib_dir}/topics/biking"
-require "#{lib_dir}/topics/reading"
-require "#{lib_dir}/topics/running"
-require "#{lib_dir}/topics/cooking"
-require "#{lib_dir}/topics/tv_shows"
-require "#{lib_dir}/topics/game_of_thrones"
 require "#{lib_dir}/pof_webdriver/base.rb"
+
+require "#{lib_dir}/topic"
+require "#{lib_dir}/topic_registry"
+
+TopicRegistryInstance = TopicRegistry.new
+TopicRegistryInstance.add_from_file("#{ROOT_DIR}/config/config.yml")

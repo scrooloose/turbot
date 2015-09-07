@@ -22,10 +22,9 @@ private
   end
 
   def body
-    Topics::Base.all_topics.each do |topic_class|
-      topic = topic_class.new
+    TopicRegistryInstance.topics.each do |topic|
       if topic.match?(profile)
-        return topic.message(profile).sub(/\n*$/, '')
+        return topic.message.sub(/\n*$/, '')
       end
     end
 

@@ -23,7 +23,7 @@ class Profile < Sequel::Model(:profiles)
     end
   end
 
-  def has_interest_matching?(*regexs)
+  def has_interest_matching?(regexs)
     regexs.detect do |regex|
       if interests.detect {|i| i =~ regex}
         return true
@@ -44,7 +44,7 @@ private
     @parse_page_contents_done = true
 
     profile_page_parser = ProfilePageParser.new(page_content: page_content)
-    bio_parser = BioParser.new(bio: profile_page_parser.bio, interest_matchers: Topics::Base.all_interest_matchers)
+    bio_parser = BioParser.new(bio: profile_page_parser.bio, interest_matchers: TopicRegistryInstance.all_interest_matchers)
 
     @bio ||= profile_page_parser.bio
     @name ||= profile_page_parser.name

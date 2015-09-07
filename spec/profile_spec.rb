@@ -6,10 +6,10 @@ RSpec.describe Profile do
       messaged_profile = ProfileFactory.create_messagable
       MessageFactory.create(response: "the response", responded_at: DateTime.now, profile: messaged_profile)
 
-      unmessaged_profile = ProfileFactory.create_messagable
       unmessagble_profile = ProfileFactory.create(interests: ['something-that-doesnt-match-anything'])
+      messagable_profile = ProfileFactory.create_messagable
 
-      expect(Profile.messagable(1).to_a).to eq([unmessaged_profile])
+      expect(Profile.messagable(1).to_a).to eq([messagable_profile])
     end
 
     it "returns the number specified" do
