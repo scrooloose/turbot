@@ -5,6 +5,15 @@ name: Rodney
 admin_email: foo@bar.com
 
 topics:
+  - name: "A name of the topic"
+    interest_matchers:
+      - 'an array of regexes without...'
+      - '... any surrounding slashes e.g.'
+      - '^a.*regex$'
+    message: "The message that should be sent if this topic matches."
+
+  #examples:
+
   - name: "Biking"
     interest_matchers:
       - '(?<!motor |motor)bik(e|ing)|cycling'
