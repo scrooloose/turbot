@@ -31,6 +31,7 @@ GEM
     ntlm-http (0.1.1)
     pony (1.11)
       mail (>= 2.0)
+    rake (10.4.2)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
@@ -59,5 +60,6 @@ DEPENDENCIES
   mysql2
   nokogiri
   pony
+  rake
   rspec
   sequel

@@ -1,9 +1,17 @@
 class Profile < Sequel::Model(:profiles)
   class NotEnoughMessagableProfiles < StandardError; end
 
+  def_dataset_method(:unmessaged) do
+    where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)")
+  end
+
+  def_dataset_method(:messaged) do
+    where("EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)")
+  end
+
   def self.messagable(number)
     rv = []
-    Profile.where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)").order(Sequel.lit('RAND()')).each_page(100) do |page|
+    unmessaged.order(Sequel.lit('RAND()')).each_page(100) do |page|
       page.each do |profile|
         rv << profile if profile.matches_any_topic?
         return rv if rv.size == number
