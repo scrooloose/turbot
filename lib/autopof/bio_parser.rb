@@ -19,7 +19,24 @@ class BioParser
       end
     end
 
+    like_lists.each do |like_list|
+      interest_matchers.each do |regex|
+        if match_data = like_list.match(regex)
+          @interests.push(match_data[0])
+        end
+      end
+    end
+
     @interests
+  end
+
+  def like_lists
+    matches = bio.scan(/^\s*[^\n]{0,40}(?:likes?|loves?|enjoy|am happiest|am happy|hobbies|passion|really into|spare time)[^\n]{0,30}:(.*?)(?:\n\n|\Z)/mi)
+    if matches.any?
+      matches.flatten
+    else
+      []
+    end
   end
 
 private
