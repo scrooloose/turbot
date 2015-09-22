@@ -34,7 +34,7 @@ private
               else
                 true
               end
-    Messager.new(dry_run: dry_run, message_limit: msg_limit).go
+    Messager.new(dry_run: dry_run, message_limit: msg_limit, webdriver: @wd).go
   end
 
   def check_for_responses_to_messages

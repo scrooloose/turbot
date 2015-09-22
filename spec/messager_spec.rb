@@ -7,7 +7,7 @@ RSpec.describe Messager do
         [ProfileFactory.build_messagable]
       )
       wd = PofWebdriver::Base.new
-      m = Messager.new(dry_run: true)
+      m = Messager.new(dry_run: true, sleep_between_msgs: false)
       expect(wd).to_not receive(:send_message)
       m.go
     end
@@ -19,7 +19,7 @@ RSpec.describe Messager do
         [ProfileFactory.build_messagable]
       )
       wd = PofWebdriver::Base.new
-      m = Messager.new(dry_run: false, webdriver: wd)
+      m = Messager.new(dry_run: false, webdriver: wd, sleep_between_msgs: false)
       expect(wd).to receive(:send_message).and_return(true)
       m.go
     end
@@ -31,7 +31,7 @@ RSpec.describe Messager do
     ProfileFactory.create_messagable
 
     wd = PofWebdriver::Base.new
-    m = Messager.new(dry_run: false, message_limit: 2, webdriver: wd)
+    m = Messager.new(dry_run: false, message_limit: 2, webdriver: wd, sleep_between_msgs: false)
     expect(wd).to receive(:send_message).twice.and_return(true)
     m.go
   end
