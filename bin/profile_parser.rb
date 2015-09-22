@@ -3,19 +3,15 @@
 require File.dirname(__FILE__) + "/../lib/autopof"
 require 'pp'
 
-profile_page = open(ARGV.first).read
-profile = ProfileParser.new(page_content: profile_page).profile
+profile_page = ProfilePageParser.new(page_content: open(ARGV.first).read)
 
-pp "Name: #{profile.name}"
+pp "Name: #{profile_page.name}"
 
 puts "\nInterests\n-------------"
-pp profile.interests
+pp profile_page.interests
 
 puts "\nInterests parsed from bio\n-------------"
-pp BioParser.new(bio: profile.bio, interest_matchers: Topics::Base.all_interest_matchers).interests
+pp BioParser.new(bio: profile_page.bio, interest_matchers: TopicRegistryInstance.all_interest_matchers).interests
 
 puts "\nBio\n-------------"
-pp profile.bio
-
-puts "\nMessage\n-------------"
-puts MessageBuilder.new(profile).message
+pp profile_page.bio
