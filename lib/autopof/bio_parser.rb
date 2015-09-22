@@ -31,7 +31,17 @@ class BioParser
   end
 
   def like_lists
-    matches = bio.scan(/^\s*[^\n]{0,40}(?:likes?|loves?|enjoy|am happiest|am happy|hobbies|passion|really into|spare time)[^\n]{0,30}:(.*?)(?:\n\n|\Z)/mi)
+    matches = bio.scan(
+      %r{
+        (?:^|[!.])                #start at beginning of line, or sentence
+        \s*                       #skip leading whitespace
+        [^\n]{0,40}               #allow up to 40 chars of text
+        (?:#{like_phrases_regex}) #the like phrase
+        [^\n]{0,30}[:-]           #more text then a list indicator char
+        (.*?)                     #the actual liked things
+        (?:\n\n|\Z)               #stop at a blank link, or end of bio
+      }xmi
+    )
     if matches.any?
       matches.flatten
     else
@@ -40,12 +50,15 @@ class BioParser
   end
 
 private
+  def like_phrases_regex
+    '\blikes?|loves?|enjoy|am happiest|am happy|hobbies|passion|really into|spare time'
+  end
 
   def like_sentences
     @sentences ||= bio.split(/[\n.!]/).select do |s|
       Log.debug "like_sentences: processing sentence: #{s}"
       #match up to 4 words, then one of the key "like" indication phrases
-      s.match(/^(\S*?\s){0,4}(like|loves?|enjoy|am happiest|am happy|hobbies|passion|really into|spare time)/im)
+      s.match(/^(\S*?\s){0,4}(#{like_phrases_regex})/im)
     end
   end
 end

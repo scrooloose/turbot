@@ -29,7 +29,7 @@ RSpec.describe MessageBuilder do
       expect(bp.interests).to be_empty
     end
 
-    def test_like_list(list_intro: 'I like:', list_prefix: '')
+    def test_like_list(list_intro: 'I like:', list_prefix: '', should_match: true)
       bio = <<-EOS
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
         tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
@@ -43,7 +43,12 @@ RSpec.describe MessageBuilder do
         no sea takimata sanctus est Lorem ipsum dolor sit amet.
       EOS
       bp = BioParser.new(bio: bio, interest_matchers: [/biking/])
-      expect(bp.interests).to include('biking')
+
+      if should_match
+        expect(bp.interests).to include('biking')
+      else
+        expect(bp.interests).not_to include('biking')
+      end
     end
 
     it "recognizes interest matches in 'list lists'" do
@@ -53,10 +58,26 @@ RSpec.describe MessageBuilder do
       test_like_list(list_intro: 'Here is a list of more interesting "likes" slash "facts":')
     end
 
+    it "can use either a colon or dash for the list delimiter/indicator" do
+      test_like_list(list_intro: 'I like:')
+      test_like_list(list_intro: 'I like :')
+      test_like_list(list_intro: 'I like - ')
+      test_like_list(list_intro: 'I like-')
+      test_like_list(list_intro: 'I like -')
+    end
+
+    it "doesn't match lists of dislikes" do
+      test_like_list(list_intro: 'I dislike:', should_match: false)
+    end
+
     it "recognizes bulletted 'like lists'" do
       test_like_list(list_prefix: "-")
       test_like_list(list_prefix: "*")
       test_like_list(list_prefix: ">")
+    end
+
+    it "recognizes 'like lists' which dont start in their own paragraph" do
+      test_like_list(list_intro: 'Here is an irrelevant sentence. And one more. And just one more. I fucking love:')
     end
 
     it "recognizes interest matches in multiple 'list lists'" do
