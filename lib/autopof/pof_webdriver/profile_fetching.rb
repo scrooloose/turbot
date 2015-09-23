@@ -29,7 +29,7 @@ private
       next if rand(2) == 0
 
       cache_profile(link.click)
-      sleep(rand(5))
+      wait_between_actions
     end
   end
 

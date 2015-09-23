@@ -10,6 +10,9 @@ class PofWebdriver::Base
   include PofWebdriver::ResponseFetching
   include PofWebdriver::MessageSending
 
+  MinWaitTime=60       #wait at least 1 min
+  WaitRandVariance=180 #and up to 3 mins after that
+
 protected
 
   def login
@@ -30,6 +33,10 @@ protected
 
   def visit(path)
     agent.get("http://www.pof.com/#{path}")
+  end
+
+  def wait_between_actions
+    sleep(MinWaitTime + rand(WaitRandVariance))
   end
 
 end

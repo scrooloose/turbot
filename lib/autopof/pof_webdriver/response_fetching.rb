@@ -20,12 +20,13 @@ private
       Log.info "#{self.class.name}: processing message from #{username}"
       if waiting_for_response_from?(username)
         record_response(username, link)
-        sleep(rand(5))
+        wait_between_actions
       end
     end
 
     if next_page_link = inbox_page.search('#inbox-message-footer-pagination a').first
       next_page = visit(next_page_link['href'])
+      wait_between_actions
       check_for_responses(next_page)
     end
   end
