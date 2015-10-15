@@ -11,7 +11,7 @@ class PofWebdriver::Base
   include PofWebdriver::MessageSending
 
   MinWaitTime=60       #wait at least 1 min
-  WaitRandVariance=180 #and up to 3 mins after that
+  WaitRandVariance=60  #and up to 1 min more
 
 protected
 
