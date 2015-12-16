@@ -22,6 +22,9 @@ RSpec.describe MessageBuilder do
     it "doesn't recognize anti-interests" do
       bp = BioParser.new(bio: "I hate biking and football", interest_matchers: [/biking/])
       expect(bp.interests).to be_empty
+
+      bp = BioParser.new(bio: "I don't really like biking and football", interest_matchers: [/biking/])
+      expect(bp.interests).to be_empty
     end
 
     it "only checks 5 words into a sentence" do
