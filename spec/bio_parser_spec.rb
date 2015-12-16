@@ -106,5 +106,9 @@ RSpec.describe MessageBuilder do
       expect(bp.interests).to match_array(['biking', 'horses'])
     end
 
+    it "accepts up to 2 new lines after the list intro", focus: true do
+      test_like_list(list_intro: "I like:\n\n\n")
+    end
+
   end
 end

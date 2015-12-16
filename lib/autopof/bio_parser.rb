@@ -38,6 +38,7 @@ class BioParser
         [^\n]{0,40}               #allow up to 40 chars of text
         (?:#{like_phrases_regex}) #the like phrase
         [^\n]{0,30}[:-]           #more text then a list indicator char
+        \s*                       #ignore whitespace
         (.*?)                     #the actual liked things
         (?:\n\n|\Z)               #stop at a blank link, or end of bio
       }xmi
