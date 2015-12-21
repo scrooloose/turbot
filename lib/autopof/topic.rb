@@ -6,7 +6,9 @@ class Topic
     @message = message
   end
 
-  def match?(profile)
-    profile.has_interest_matching?(interest_matchers)
+  def matches?(bio_fragment)
+    interest_matchers.any? do |regex|
+      bio_fragment.match(regex)
+    end
   end
 end

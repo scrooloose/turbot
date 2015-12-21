@@ -22,9 +22,9 @@ class Profile < Sequel::Model(:profiles)
   end
 
   #TODO: these should all be readonly, but are read/write for easier testing
-  attr_writer :bio, :name, :interests
+  attr_writer :bio, :name, :topics
 
-  [:bio, :name, :interests].each do |property|
+  [:bio, :name, :topics, :interests].each do |property|
     define_method(property) do
       parse_page_contents
       instance_variable_get("@#{property}")
@@ -40,9 +40,7 @@ class Profile < Sequel::Model(:profiles)
   end
 
   def matches_any_topic?
-    MessageBuilder.new(self).message && true
-  rescue MessageBuilder::NoMatchingTopicError
-    nil
+    topics_for_interests(interests).any?
   end
 
 private
@@ -52,10 +50,15 @@ private
     @parse_page_contents_done = true
 
     profile_page_parser = ProfilePageParser.new(page_content: page_content)
-    bio_parser = BioParser.new(bio: profile_page_parser.bio, interest_matchers: TopicRegistryInstance.all_interest_matchers)
+    bio_parser = BioParser.new(bio: profile_page_parser.bio, topics: TopicRegistryInstance.topics)
 
     @bio ||= profile_page_parser.bio
     @name ||= profile_page_parser.name
-    @interests ||= profile_page_parser.interests + bio_parser.interests
+    @interests ||= profile_page_parser.interests
+    @topics ||= topics_for_interests(@interests) + bio_parser.topics
+  end
+
+  def topics_for_interests(interests)
+    interests.map {|i| TopicRegistryInstance.matching(i)}.compact.flatten.to_set
   end
 end

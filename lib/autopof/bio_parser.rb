@@ -1,33 +1,27 @@
 class BioParser
-  attr_reader :bio, :interest_matchers
+  attr_reader :bio, :topics
 
-  def initialize(bio: [], interest_matchers: [])
+  def initialize(bio: [], topics: [])
     @bio = bio
-    @interest_matchers = interest_matchers
+    @topics = topics
   end
 
-  def interests
-    return @interests if @interests
+  def matching_topics
+    matching_topics = []
 
-    @interests = []
-
-    like_sentences.each do |sentence|
-      interest_matchers.each do |regex|
-        if match_data = sentence.match(regex)
-          @interests.push(match_data[0])
-        end
+    (like_sentences + like_lists).each do |fragment|
+      matching_topics = matching_topics + topics.select do |topic|
+        topic.matches?(fragment)
       end
     end
 
-    like_lists.each do |like_list|
-      interest_matchers.each do |regex|
-        if match_data = like_list.match(regex)
-          @interests.push(match_data[0])
-        end
-      end
-    end
+    matching_topics.uniq
+  end
 
-    @interests
+private
+
+  def like_phrases_regex
+    '\blikes?|loves?|enjoy|am happiest|am happy|hobbies|passion|really into|spare time'
   end
 
   def like_lists
@@ -48,11 +42,6 @@ class BioParser
     else
       []
     end
-  end
-
-private
-  def like_phrases_regex
-    '\blikes?|loves?|enjoy|am happiest|am happy|hobbies|passion|really into|spare time'
   end
 
   def like_sentences

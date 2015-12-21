@@ -22,13 +22,11 @@ private
   end
 
   def body
-    TopicRegistryInstance.topics.each do |topic|
-      if topic.match?(profile)
-        return topic.message.sub(/\n*$/, '')
-      end
+    if profile.topics.empty?
+      raise(NoMatchingTopicError, "Could not build message. No topics matched")
     end
 
-    raise(NoMatchingTopicError, "Could not build message. No topics matched")
+    profile.topics.first.message.sub(/\n*$/, '')
   end
 
   def signoff

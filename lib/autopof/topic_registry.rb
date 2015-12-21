@@ -23,5 +23,7 @@ class TopicRegistry
     end
   end
 
-
+  def matching(bio_fragment)
+    topics.select {|t| t.matches?(bio_fragment)}
+  end
 end
