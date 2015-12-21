@@ -35,4 +35,13 @@ RSpec.describe Messager do
     expect(wd).to receive(:send_message).twice.and_return(true)
     m.go
   end
+
+  it "retries when messaging fails" do
+    ProfileFactory.create_messagable
+
+    wd = PofWebdriver::Base.new
+    m = Messager.new(dry_run: false, message_limit: 1, webdriver: wd, sleep_between_msgs: false, retries: 1)
+    expect(wd).to receive(:send_message).twice.and_raise(StandardError)
+    m.go
+  end
 end
