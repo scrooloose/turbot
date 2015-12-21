@@ -10,8 +10,8 @@ class PofWebdriver::Base
   include PofWebdriver::ResponseFetching
   include PofWebdriver::MessageSending
 
-  MinWaitTime=60       #wait at least 1 min
-  WaitRandVariance=60  #and up to 1 min more
+  MinWaitTime=30       #wait at least 30 sec
+  WaitRandVariance=30  #and up to 30 secs more
 
 protected
 
