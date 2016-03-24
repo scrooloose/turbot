@@ -4,6 +4,13 @@ namespace :db do
     env = ENV['AUTOPOF_ENV'] || raise("AUTOPOF_ENV must be set")
     system("sequel -m db/migrations -e #{env} ./config/db.yml")
   end
+
+  desc 'Rollback to revision ENV["rev"]'
+  task :rollback do
+    env = ENV['AUTOPOF_ENV'] || raise("AUTOPOF_ENV must be set")
+    rev = ENV['REV'] || raise("ENV['REV'] must be set")
+    system("sequel -m db/migrations -M #{rev} -e #{env} ./config/db.yml")
+  end
 end
 
 desc 'Output a bunch of stats'
