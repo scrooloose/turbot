@@ -24,7 +24,9 @@ class Profile < Sequel::Model(:profiles)
   #TODO: these should all be readonly, but are read/write for easier testing
   attr_writer :bio, :name, :topics
 
-  [:bio, :name, :topics, :interests].each do |property|
+  DerivedFields=[:bio, :name, :topics, :interests]
+
+  DerivedFields.each do |property|
     define_method(property) do
       parse_page_contents
       instance_variable_get("@#{property}")
@@ -43,7 +45,21 @@ class Profile < Sequel::Model(:profiles)
     topics_for_interests(interests).any?
   end
 
+  def refresh
+    super
+    clear_derived_fields
+    parse_page_contents
+    self
+  end
+
 private
+
+  def clear_derived_fields
+    DerivedFields.each do |f|
+      remove_instance_variable("@#{f}".to_sym)
+    end
+    remove_instance_variable("@parse_page_contents_done".to_sym)
+  end
 
   def parse_page_contents
     return if @parse_page_contents_done

@@ -30,7 +30,7 @@ RSpec.describe ProfilePageParser do
   end
 
   it "parses name if present on profile" do
-    expect(test_parser(file: 'profile2.html').name).to eq('Emma')
+    expect(test_parser(file: 'emma.html').name).to eq('Emma')
   end
 
   it "returns nil for name if not present on profile" do

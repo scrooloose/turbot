@@ -39,6 +39,7 @@ require "#{lib_dir}/profile_page_parser"
 require "#{lib_dir}/bio_parser"
 require "#{lib_dir}/message_builder"
 require "#{lib_dir}/messager"
+require "#{lib_dir}/profile_cacher"
 require "#{lib_dir}/pof_webdriver/base.rb"
 
 require "#{lib_dir}/topic"

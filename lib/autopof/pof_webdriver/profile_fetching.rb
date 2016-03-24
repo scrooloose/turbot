@@ -35,16 +35,7 @@ private
 
   def cache_profile(page)
     Log.info "#{self.class.name} - caching: #{page.uri.to_s}"
-
-    parser = ProfilePageParser.new(page_content: page.body)
-
-    profile = if Profile.where(pof_key: parser.pof_key).any?
-                Profile.find(pof_key: parser.pof_key)
-              else
-                Profile.new(username: parser.username, pof_key: parser.pof_key)
-              end
-    profile.page_content = page.body
-    profile.save
+    ProfileCacher.new(page.body).cache
   end
 
 end

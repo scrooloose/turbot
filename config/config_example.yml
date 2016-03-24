@@ -4,6 +4,8 @@ name: Rodney
 
 admin_email: foo@bar.com
 
+user_profile_id: 1
+
 topics:
   - name: "A name of the topic"
     interest_matchers:
