@@ -9,9 +9,13 @@ class Profile < Sequel::Model(:profiles)
     where("EXISTS (SELECT * FROM messages WHERE messages.recipient_profile_id = profiles.id)")
   end
 
+  def_dataset_method(:excluding_me) do
+    where("profiles.id != #{Config['user_profile_id']}")
+  end
+
   def self.messagable(number)
     rv = []
-    unmessaged.order(Sequel.lit('RAND()')).each_page(100) do |page|
+    unmessaged.excluding_me.order(Sequel.lit('RAND()')).each_page(100) do |page|
       page.each do |profile|
         rv << profile if profile.matches_any_topic?
         return rv if rv.size == number

@@ -16,7 +16,7 @@ RSpec.describe ProfileCacher do
     it "creates new profiles" do
       expect {
         ProfileCacher.new(File.read(test_file_path("emma.html"))).cache
-      }.to change(Profile, :count).to(1)
+      }.to change(Profile, :count).by(1)
 
     end
   end

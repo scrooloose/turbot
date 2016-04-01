@@ -4,7 +4,7 @@ RSpec.describe Profile do
   describe ".messagable" do
     it "returns profiles that can be messaged, and haven't been already" do
       messaged_profile = ProfileFactory.create_messagable
-      MessageFactory.create(response: "the response", responded_at: DateTime.now, profile: messaged_profile)
+      Message.create_sent_message(recipient: messaged_profile, content: "foo")
 
       unmessagble_profile = ProfileFactory.create(interests: ['something-that-doesnt-match-anything'])
       messagable_profile = ProfileFactory.create_messagable

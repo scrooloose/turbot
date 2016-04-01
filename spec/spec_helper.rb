@@ -27,6 +27,10 @@ def root_dir
   @root_dir ||= File.dirname(__FILE__) + "/.."
 end
 
+#hack to make sure Profile.me works
+Profile.where('id > 0').delete #delete all
+Config['user_profile_id'] = ProfileFactory.from_test_fixture('me.html').id
+
 RSpec.configure do |config|
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
