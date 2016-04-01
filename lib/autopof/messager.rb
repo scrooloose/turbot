@@ -1,7 +1,7 @@
 class Messager
   attr_reader :dry_run, :message_limit, :webdriver, :sleep_between_msgs, :retries
 
-  def initialize(dry_run: true, message_limit: 2, webdriver: nil, sleep_between_msgs: true, retries: 3)
+  def initialize(dry_run: true, message_limit: 2, webdriver: PofWebdriver::Base.new, sleep_between_msgs: true, retries: 3)
     @dry_run = dry_run
     @message_limit = message_limit
     @webdriver = webdriver || PofWebdriver::Base.new
