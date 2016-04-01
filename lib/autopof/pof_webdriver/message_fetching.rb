@@ -1,5 +1,5 @@
-module PofWebdriver::ResponseFetching
-  def check_for_responses_to_messages
+module PofWebdriver::MessageFetching
+  def check_messages
     login
     inbox_page = goto_inbox
     check_for_responses(inbox_page)

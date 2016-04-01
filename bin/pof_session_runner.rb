@@ -8,7 +8,7 @@ class PofSession
   end
 
   def run
-    check_for_responses_to_messages
+    check_messages
     cache_profiles
     send_some_messages
   rescue Exception => e
@@ -37,8 +37,8 @@ private
     Messager.new(dry_run: dry_run, message_limit: msg_limit, webdriver: @wd).go
   end
 
-  def check_for_responses_to_messages
-    @wd.check_for_responses_to_messages
+  def check_messages
+    @wd.check_messages
   end
 end
 

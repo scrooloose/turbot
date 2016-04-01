@@ -2,12 +2,12 @@ module PofWebdriver; end
 
 module_dir = File.dirname(__FILE__)
 require "#{module_dir}/profile_fetching"
-require "#{module_dir}/response_fetching"
+require "#{module_dir}/message_fetching"
 require "#{module_dir}/message_sending"
 
 class PofWebdriver::Base
   include PofWebdriver::ProfileFetching
-  include PofWebdriver::ResponseFetching
+  include PofWebdriver::MessageFetching
   include PofWebdriver::MessageSending
 
   MinWaitTime=30       #wait at least 30 sec
