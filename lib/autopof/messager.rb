@@ -13,7 +13,7 @@ class Messager
     Profile.messagable(message_limit).each do |profile|
       msg_text = MessageBuilder.new(profile).message
       Log.info("Messenger#go - Sending message to #{profile.username}. Message: #{msg_text}")
-      attempt_to_send(msg_text, profile) unless dry_run
+      attempt_to_send(msg_text, profile)
       sleep(rand(60) + 60) if sleep_between_msgs
     end
   end
@@ -23,7 +23,7 @@ private
     attempts = 0
 
     begin
-      webdriver.send_message(message: msg, profile: profile)
+      webdriver.send_message(message: msg, profile: profile, dry_run: dry_run)
     rescue StandardError => e
       if attempts < retries
         attempts += 1

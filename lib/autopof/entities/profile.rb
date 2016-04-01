@@ -21,6 +21,10 @@ class Profile < Sequel::Model(:profiles)
     raise(NotEnoughMessagableProfiles, "Couldn't find #{number} messagable profiles")
   end
 
+  def self.me
+    @me ||= find(Config['user_profile_id'])
+  end
+
   #TODO: these should all be readonly, but are read/write for easier testing
   attr_writer :bio, :name, :topics
 
