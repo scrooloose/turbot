@@ -9,10 +9,6 @@ Sequel.migration do
       SET sent_at=created_at
       WHERE sent_at IS NULL
     SQL
-
-    alter_table(:messages) do
-      drop_column :response
-    end
   end
 
   down do
