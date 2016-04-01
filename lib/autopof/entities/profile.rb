@@ -2,11 +2,11 @@ class Profile < Sequel::Model(:profiles)
   class NotEnoughMessagableProfiles < StandardError; end
 
   def_dataset_method(:unmessaged) do
-    where("NOT EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)")
+    where("NOT EXISTS (SELECT * FROM messages WHERE messages.recipient_profile_id = profiles.id)")
   end
 
   def_dataset_method(:messaged) do
-    where("EXISTS (SELECT * FROM messages WHERE messages.profile_id = profiles.id)")
+    where("EXISTS (SELECT * FROM messages WHERE messages.recipient_profile_id = profiles.id)")
   end
 
   def self.messagable(number)
