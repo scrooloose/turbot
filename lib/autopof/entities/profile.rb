@@ -22,7 +22,7 @@ class Profile < Sequel::Model(:profiles)
   end
 
   def self.me
-    @me ||= find(Config['user_profile_id'])
+    @me ||= find(id: Config['user_profile_id'])
   end
 
   #TODO: these should all be readonly, but are read/write for easier testing

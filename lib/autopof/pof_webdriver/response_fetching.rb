@@ -13,15 +13,11 @@ private
 
   def check_for_responses(inbox_page)
     Log.info "#{self.class.name}: check_for_responses"
-    response_links = inbox_page.search("//a[contains(@id, 'inbox-readmessage-link-')]")
+    messages = inbox_page.search(".inbox-message-wrapper")
 
-    response_links.each do |link|
-      username = link.search('.inbox-message-user-name').text.strip.split.first
-      Log.info "#{self.class.name}: processing message from #{username}"
-      if waiting_for_response_from?(username)
-        record_response(username, link)
-        wait_between_actions
-      end
+    messages.each do |message|
+      process_message(message)
+      wait_between_actions
     end
 
     if next_page_link = inbox_page.search('#inbox-message-footer-pagination a').first
@@ -35,13 +31,32 @@ private
     Message.messages_awaiting_response_for(username).any?
   end
 
+  def process_message(message)
+    profile_link = message.search("a[href*='viewprofile']").first
+    message_link = message.search("a[id*='inbox-readmessage-link-']").first
+
+    username = message_link.search('.inbox-message-user-name, .inbox-message-user-name-upgraded').text.strip.split.first
+    sent_at = parse_msg_date(message_link.search('.inbox-message-recieved-date').text)
+    Log.info "#{self.class.name}: processing message from #{username} at #{sent_at}"
+
+    unless Message.exists_for?(username: username, sent_at: sent_at)
+      sender_profile = cache_profile_for(username, profile_link)
+      message_page = visit(message_link['href'])
+      message = message_page.search('.msg-row .message-content').last.text
+      Message.create_received_message(sender: sender_profile, content: message, sent_at: sent_at)
+    end
+  end
+
+  def cache_profile_for(username, profile_link)
+    if profile = Profile.find(username: username)
+      return profile
+    end
+
+    ProfileCacher.new(visit(profile_link['href']).body).cache
+  end
+
   def record_response(username, link)
     Log.info "#{self.class.name}: record_response(username: #{username})"
-    message = Message.messages_awaiting_response_for(username).first
-    resp_page = visit(link['href'])
-    resp_date = parse_msg_date(resp_page.search('.msg-row div:first-of-type').first.text)
-    resp_text = resp_page.search('.msg-row .message-content').last.text
-    DB[:messages].where(id: message[:id]).update(response: resp_text, responded_at: resp_date)
   end
 
   def parse_msg_date(str)

@@ -1,6 +1,7 @@
-require File.join(File.dirname(__FILE__),  "/../../lib/config")
+ROOT_DIR = File.join(File.dirname(__dir__), "..")
+require File.join(File.dirname(__dir__),  "/../lib/autopof/config")
 
-ProfileID = Config['pof_profile_id'] || raise("no profile id")
+ProfileID = Config['user_profile_id'] || raise("no profile id")
 
 Sequel.migration do
   up do
