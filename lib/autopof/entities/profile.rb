@@ -60,6 +60,11 @@ class Profile < Sequel::Model(:profiles)
     self
   end
 
+  def make_unavailable!
+    self.unavailable = true
+    save(raise_on_failure: true)
+  end
+
 private
 
   def clear_derived_fields

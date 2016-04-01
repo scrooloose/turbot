@@ -1,16 +1,16 @@
 class Messager
-  attr_reader :dry_run, :message_limit, :webdriver, :sleep_between_msgs, :retries
+  attr_reader :dry_run, :profiles, :webdriver, :sleep_between_msgs, :retries
 
-  def initialize(dry_run: true, message_limit: 2, webdriver: PofWebdriver::Base.new, sleep_between_msgs: true, retries: 3)
+  def initialize(dry_run: true, profiles: profiles, webdriver: PofWebdriver::Base.new, sleep_between_msgs: true, retries: 3)
     @dry_run = dry_run
-    @message_limit = message_limit
+    @profiles = profiles
     @webdriver = webdriver || PofWebdriver::Base.new
     @sleep_between_msgs = sleep_between_msgs
     @retries = retries
   end
 
   def go
-    Profile.messagable(message_limit).each do |profile|
+    profiles.each do |profile|
       msg_text = MessageBuilder.new(profile).message
       Log.info("Messenger#go - Sending message to #{profile.username}. Message: #{msg_text}")
       attempt_to_send(msg_text, profile)
@@ -23,12 +23,14 @@ private
     attempts = 0
 
     begin
-      webdriver.send_message(message: msg, profile: profile, dry_run: dry_run)
+      webdriver.send_message(message: msg, profile: profile) unless dry_run
+      Message.create_sent_message(recipient: profile, content: msg)
     rescue StandardError => e
       if attempts < retries
         attempts += 1
         retry
       else
+        profile.make_unavailable!
         #vomit out stuff to stdout since cron will email that to us - i.e.
         #effectively emailing us the error report
         if AUTOPOF_ENV != 'test'

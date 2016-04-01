@@ -3,44 +3,47 @@ require File.dirname(__FILE__) + "/spec_helper"
 RSpec.describe Messager do
   context "when dry_run is true" do
     it "doesn't send messages" do
-      expect(Profile).to receive(:messagable).and_return(
-        [ProfileFactory.build_messagable]
-      )
-      wd = PofWebdriver::Base.new
-      m = Messager.new(dry_run: true, sleep_between_msgs: false, webdriver: wd)
+      wd = object_double(PofWebdriver::Base.new)
       expect(wd).to_not receive(:send_message)
-      m.go
+      Messager.new(dry_run: true, profiles: [ProfileFactory.build_messagable], sleep_between_msgs: false, webdriver: wd).go
     end
   end
 
   context "when dry_run is false" do
     it "sends messages" do
-      expect(Profile).to receive(:messagable).and_return(
-        [ProfileFactory.build_messagable]
-      )
-      wd = PofWebdriver::Base.new
-      m = Messager.new(dry_run: false, webdriver: wd, sleep_between_msgs: false)
+      wd = object_double(PofWebdriver::Base.new)
       expect(wd).to receive(:send_message).and_return(true)
-      m.go
+
+      Messager.new(dry_run: false, profiles: [ProfileFactory.build_messagable], webdriver: wd, sleep_between_msgs: false).go
     end
   end
 
-  it "respects the 'message_limit' param" do
-    ProfileFactory.create_messagable
-    ProfileFactory.create_messagable
-    ProfileFactory.create_messagable
+  it "messages the given profiles" do
+    profiles = [
+      ProfileFactory.create_messagable,
+      ProfileFactory.create_messagable
+    ]
 
-    m = Messager.new(dry_run: false, message_limit: 2, sleep_between_msgs: false)
+    wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).twice.and_return(true)
-    m.go
+
+    Messager.new(dry_run: false, webdriver: wd, profiles: profiles, sleep_between_msgs: false).go
   end
 
   it "retries when messaging fails" do
-    ProfileFactory.create_messagable
-
-    wd = PofWebdriver::Base.new
-    m = Messager.new(dry_run: false, message_limit: 1, webdriver: wd, sleep_between_msgs: false, retries: 1)
+    wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).twice.and_raise(StandardError)
-    m.go
+    Messager.new(dry_run: false, webdriver: wd, profiles: [ProfileFactory.create_messagable], sleep_between_msgs: false, retries: 1).go
+  end
+
+  it "marks the profile as unavailable when messaging fails" do
+    wd = object_double(PofWebdriver::Base.new)
+    expect(wd).to receive(:send_message).at_least(:once).and_raise(NoMethodError)
+
+    p = ProfileFactory.create_messagable
+    Messager.new(dry_run: false, webdriver: wd, profiles: [p], sleep_between_msgs: false).go
+
+    p.reload
+    expect(p.unavailable).to be
   end
 end
