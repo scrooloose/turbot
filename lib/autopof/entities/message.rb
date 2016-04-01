@@ -7,7 +7,7 @@ class Message < Sequel::Model(:messages)
     create(recipient_profile_id: Profile.me.id, content: content, sender_profile_id: sender.id, sent_at: sent_at)
   end
 
-  def self.exists_for?(username: nil, sent_at: sent_at)
+  def self.exists_for?(username: nil, sent_at: nil)
     join(:profiles, id: :sender_profile_id).where('profiles.username' => username, 'messages.sent_at' => sent_at).any?
   end
 end
