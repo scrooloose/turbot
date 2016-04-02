@@ -34,7 +34,7 @@ private
               else
                 true
               end
-    Messager.new(dry_run: dry_run, message_limit: msg_limit, webdriver: @wd, profiles: Profile.messagable(message_limit)).go
+    Messager.new(dry_run: dry_run, message_limit: msg_limit, webdriver: @wd, profiles: Profile.messagable(msg_limit)).go
   end
 
   def check_messages
