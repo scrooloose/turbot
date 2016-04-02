@@ -35,7 +35,7 @@ private
     sent_at = parse_msg_date(message_link.search('.inbox-message-recieved-date').text)
     Log.info "#{self.class.name}: processing message from #{username} at #{sent_at}"
 
-    unless Message.exists_for?(username: username, sent_at: sent_at)
+    unless Message.received?(username: username, sent_at: sent_at)
       sender_profile = cache_profile_for(username, profile_link)
       message_page = visit(message_link['href'])
       message = message_page.search('.msg-row .message-content').last.text
