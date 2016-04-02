@@ -65,6 +65,12 @@ class Profile < Sequel::Model(:profiles)
     save(raise_on_failure: true)
   end
 
+  def inspect
+    v = values.clone
+    v[:page_content] = v[:page_content].first(20) + " ..."
+    "#<#{model.name} @values=#{v}>"
+  end
+
 private
 
   def clear_derived_fields
