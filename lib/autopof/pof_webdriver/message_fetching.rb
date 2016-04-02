@@ -27,10 +27,6 @@ private
     end
   end
 
-  def waiting_for_response_from?(username)
-    Message.messages_awaiting_response_for(username).any?
-  end
-
   def process_message(message)
     profile_link = message.search("a[href*='viewprofile']").first
     message_link = message.search("a[id*='inbox-readmessage-link-']").first
@@ -53,10 +49,6 @@ private
     end
 
     ProfileCacher.new(visit(profile_link['href']).body).cache
-  end
-
-  def record_response(username, link)
-    Log.info "#{self.class.name}: record_response(username: #{username})"
   end
 
   def parse_msg_date(str)
