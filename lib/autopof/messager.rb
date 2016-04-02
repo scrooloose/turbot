@@ -1,10 +1,10 @@
 class Messager
   attr_reader :dry_run, :profiles, :webdriver, :sleep_between_msgs, :retries
 
-  def initialize(dry_run: true, profiles: profiles, webdriver: PofWebdriver::Base.new, sleep_between_msgs: true, retries: 3)
+  def initialize(dry_run: true, profiles: profiles, webdriver: PofWebdriver::Base.new, sleep_between_msgs: AUTOPOF_ENV != "test", retries: 3)
     @dry_run = dry_run
     @profiles = profiles
-    @webdriver = webdriver || PofWebdriver::Base.new
+    @webdriver = webdriver
     @sleep_between_msgs = sleep_between_msgs
     @retries = retries
   end
