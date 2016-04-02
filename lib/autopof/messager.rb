@@ -25,7 +25,7 @@ private
     begin
       webdriver.send_message(message: msg, profile: profile) unless dry_run
       Message.create_sent_message(recipient: profile, content: msg)
-    rescue StandardError => e
+    rescue PofWebdriver::Error => e
       if attempts < retries
         attempts += 1
         retry

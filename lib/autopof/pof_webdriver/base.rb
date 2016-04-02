@@ -1,4 +1,7 @@
-module PofWebdriver; end
+module PofWebdriver
+  class Error < StandardError; end
+  class MessageSendError < Error; end
+end
 
 module_dir = File.dirname(__FILE__)
 require "#{module_dir}/profile_fetching"

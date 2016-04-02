@@ -32,13 +32,13 @@ RSpec.describe Messager do
 
   it "retries when messaging fails" do
     wd = object_double(PofWebdriver::Base.new)
-    expect(wd).to receive(:send_message).twice.and_raise(StandardError)
+    expect(wd).to receive(:send_message).twice.and_raise(PofWebdriver::MessageSendError)
     Messager.new(dry_run: false, webdriver: wd, profiles: [ProfileFactory.create_messagable], retries: 1).go
   end
 
   it "marks the profile as unavailable when messaging fails" do
     wd = object_double(PofWebdriver::Base.new)
-    expect(wd).to receive(:send_message).at_least(:once).and_raise(NoMethodError)
+    expect(wd).to receive(:send_message).at_least(:once).and_raise(PofWebdriver::MessageSendError)
 
     p = ProfileFactory.create_messagable
     Messager.new(dry_run: false, webdriver: wd, profiles: [p]).go
