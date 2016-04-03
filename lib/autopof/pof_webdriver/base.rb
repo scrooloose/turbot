@@ -16,6 +16,12 @@ class PofWebdriver::Base
   MinWaitTime=30       #wait at least 30 sec
   WaitRandVariance=30  #and up to 30 secs more
 
+  attr_reader :message_processor_class
+
+  def initialize(message_processor_class: ReceivedMessageProcessor)
+    @message_processor_class = message_processor_class
+  end
+
 protected
 
   def login

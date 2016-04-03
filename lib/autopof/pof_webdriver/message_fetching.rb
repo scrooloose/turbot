@@ -35,20 +35,17 @@ private
     sent_at = parse_msg_date(message_link.search('.inbox-message-recieved-date').text)
     Log.info "#{self.class.name}: processing message from #{username} at #{sent_at}"
 
-    unless Message.received?(username: username, sent_at: sent_at)
-      sender_profile = cache_profile_for(username, profile_link)
-      message_page = visit(message_link['href'])
-      message = message_page.search('.msg-row .message-content').last.text
-      Message.create_received_message(sender: sender_profile, content: message, sent_at: sent_at)
-    end
+    message_processor_class.new(
+      username: username,
+      sent_at: sent_at,
+      content: extract_message_content(message_link),
+      profile_page: visit(profile_link['href']).body
+    ).go
   end
 
-  def cache_profile_for(username, profile_link)
-    if profile = Profile.find(username: username)
-      return profile
-    end
-
-    ProfileCacher.new(visit(profile_link['href']).body).cache
+  def extract_message_content(link)
+    message_page = visit(link['href'])
+    message_page.search('.msg-row .message-content').last.text
   end
 
   def parse_msg_date(str)

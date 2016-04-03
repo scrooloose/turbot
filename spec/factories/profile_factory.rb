@@ -38,7 +38,7 @@ private
   end
 
   def self.page_content_for(params)
-    page = Nokogiri.HTML(File.read(test_file_path('base.html')))
+    page = Nokogiri.HTML(test_file_content('base.html'))
 
     params[:interests].each do |interest|
       new_interest = %Q(<li class="text-lg"><a href="/interests/#{interest}">#{interest}</a></li>)
