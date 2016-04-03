@@ -21,7 +21,7 @@ private
     end
 
     if next_page_link = inbox_page.search('#inbox-message-footer-pagination a').first
-      next_page = visit(next_page_link['href'])
+      next_page = next_page_link['href'].click
       wait_between_actions
       check_for_responses(next_page)
     end
@@ -39,12 +39,12 @@ private
       username: username,
       sent_at: sent_at,
       content: extract_message_content(message_link),
-      profile_page: visit(profile_link['href']).body
+      profile_page: profile_link.click.body
     ).go
   end
 
   def extract_message_content(link)
-    message_page = visit(link['href'])
+    message_page = link.click
     message_page.search('.msg-row .message-content').last.text
   end
 
