@@ -16,7 +16,7 @@ class PofSession
   rescue StandardError => e
     if AUTOPOF_ENV == "production"
       body = e.message + "\n" + e.backtrace.join("\n")
-      Pony.mail(to: Config['admin_email'], from: Config['admin_email'], subject: 'Pofbot Error', body: body)
+      Pony.mail(to: error_email, from: error_email, subject: 'Pofbot Error', body: body)
     else
       raise e
     end
