@@ -1,11 +1,11 @@
 class Messager
-  attr_reader :dry_run, :profiles, :webdriver, :sleep_between_msgs, :retries
+  attr_reader :dry_run, :profiles, :webdriver, :sleep_strategy, :retries
 
-  def initialize(dry_run: true, profiles: nil, webdriver: PofWebdriver::Base.new, sleep_between_msgs: AUTOPOF_ENV != "test", retries: 3)
+  def initialize(dry_run: true, profiles: nil, webdriver: PofWebdriver::Base.new, sleep_strategy: SleepStrategy.new, retries: 3)
     @dry_run = dry_run
     @profiles = profiles
     @webdriver = webdriver
-    @sleep_between_msgs = sleep_between_msgs
+    @sleep_strategy = sleep_strategy
     @retries = retries
   end
 
@@ -14,7 +14,7 @@ class Messager
       msg_text = MessageBuilder.new(profile).message
       Log.info("Messenger#go - Sending message to #{profile.username}. Message: #{msg_text}")
       attempt_to_send(msg_text, profile)
-      sleep(rand(60) + 60) if sleep_between_msgs
+      sleep_strategy.sleep
     end
   end
 

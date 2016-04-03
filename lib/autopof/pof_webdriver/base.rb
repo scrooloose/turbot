@@ -13,12 +13,11 @@ class PofWebdriver::Base
   include PofWebdriver::MessageFetching
   include PofWebdriver::MessageSending
 
-  attr_reader :message_processor_class, :min_wait_time, :wait_variance
+  attr_reader :message_processor_class, :sleep_strategy
 
-  def initialize(message_processor_class: ReceivedMessageProcessor, min_wait_time: 30, wait_variance: 30)
+  def initialize(message_processor_class: ReceivedMessageProcessor, sleep_strategy: SleepStrategy.new)
     @message_processor_class = message_processor_class
-    @min_wait_time = min_wait_time
-    @wait_variance = wait_variance
+    @sleep_strategy = sleep_strategy
   end
 
 protected
@@ -44,7 +43,6 @@ protected
   end
 
   def wait_between_actions
-    sleep(min_wait_time + rand(wait_variance))
+    sleep_strategy.sleep
   end
-
 end

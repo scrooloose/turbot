@@ -42,6 +42,8 @@ require "#{lib_dir}/message_builder"
 require "#{lib_dir}/messager"
 require "#{lib_dir}/received_message_processor"
 require "#{lib_dir}/profile_cacher"
+require "#{lib_dir}/pof_session"
+require "#{lib_dir}/sleep_strategy"
 require "#{lib_dir}/pof_webdriver/base.rb"
 
 require "#{lib_dir}/topic"

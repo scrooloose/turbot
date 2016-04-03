@@ -2,44 +2,13 @@
 
 require File.dirname(__FILE__) + "/../lib/autopof"
 
-class PofSession
-  def initialize
-    @wd = PofWebdriver::Base.new
-  end
+search_pages_to_process = ENV['pages'] && ENV['pages'].to_i || 3
+messages_to_send = ENV['message_limit'] && ENV['message_limit'].to_i || 2
+dry_run = ENV['dry_run'] && ENV['dry_run'].to_i == 1
 
-  def run
-    check_messages
-    cache_profiles
-    send_some_messages
-  rescue Exception => e
-    if AUTOPOF_ENV == "production"
-      body = e.message + "\n" + e.backtrace.join("\n")
-      Pony.mail(to: Config['admin_email'], from: Config['admin_email'], subject: 'Pofbot Error', body: body)
-    else
-      raise e
-    end
-  end
+Log.info "Starting PofSession with search_pages_to_process: #{search_pages_to_process}, messages_to_send: #{messages_to_send}, dry_run: #{dry_run}"
 
-private
-
-  def cache_profiles
-    pages = ENV['pages'] ? ENV['pages'].to_i : 3
-    @wd.cache_profiles_from_search_page(num_pages: pages)
-  end
-
-  def send_some_messages
-    msg_limit = ENV['message_limit'] ? ENV['message_limit'].to_i : 2
-    dry_run = if ENV['dry_run']
-                ENV['dry_run'].to_i == 1
-              else
-                true
-              end
-    Messager.new(dry_run: dry_run, webdriver: @wd, profiles: Profile.messagable(msg_limit)).go
-  end
-
-  def check_messages
-    @wd.check_messages
-  end
-end
-
-PofSession.new.run
+PofSession.new(
+  search_pages_to_process: search_pages_to_process, messages_to_send: messages_to_send, dry_run: dry_run,
+  webdriver: PofWebdriver::Base.new
+).run
