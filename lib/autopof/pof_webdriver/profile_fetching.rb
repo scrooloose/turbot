@@ -35,7 +35,7 @@ private
 
   def cache_profile(page)
     Log.info "#{self.class.name} - caching: #{page.uri.to_s}"
-    ProfileCacher.new(page.body).cache
+    profile_cacher.cache(page.body)
   end
 
 end

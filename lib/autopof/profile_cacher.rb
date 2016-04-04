@@ -1,6 +1,10 @@
 class ProfileCacher
   attr_reader :profile_page_body
 
+  def self.cache(profile_page_body)
+    new(profile_page_body).cache
+  end
+
   def initialize(profile_page_body)
     @profile_page_body = profile_page_body
   end

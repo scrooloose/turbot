@@ -1,6 +1,14 @@
 require File.dirname(__FILE__) + "/spec_helper"
 
 RSpec.describe ProfileCacher do
+  it "forwards .cache onto #cache" do
+    cacher_double = instance_double(ProfileCacher)
+    expect(cacher_double).to receive(:cache)
+
+    expect(ProfileCacher).to receive(:new).with("body").and_return(cacher_double)
+    ProfileCacher.cache("body")
+  end
+
   describe "#cache" do
     it "update existing profiles" do
       profile = ProfileFactory.from_test_fixture("emma.html")

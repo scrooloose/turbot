@@ -13,11 +13,12 @@ class PofWebdriver::Base
   include PofWebdriver::MessageFetching
   include PofWebdriver::MessageSending
 
-  attr_reader :message_processor_class, :sleep_strategy
+  attr_reader :message_processor, :sleep_strategy, :profile_cacher
 
-  def initialize(message_processor_class: ReceivedMessageProcessor, sleep_strategy: SleepStrategy.new)
-    @message_processor_class = message_processor_class
+  def initialize(message_processor: ReceivedMessageProcessor, profile_cacher: ProfileCacher, sleep_strategy: SleepStrategy.new)
+    @message_processor = message_processor
     @sleep_strategy = sleep_strategy
+    @profile_cacher = profile_cacher
   end
 
 protected

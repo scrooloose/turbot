@@ -1,11 +1,18 @@
 require File.dirname(__FILE__) + "/spec_helper"
 
 RSpec.describe ReceivedMessageProcessor do
-  describe "#go" do
+  it "forwards .process_message onto #process_message" do
+    processor_double = instance_double(ReceivedMessageProcessor)
+    expect(processor_double).to receive(:process_message)
+    expect(ReceivedMessageProcessor).to receive(:new).with(username: "foo").and_return(processor_double)
+    ReceivedMessageProcessor.process_message(username: "foo")
+  end
+
+  describe "#process_message" do
     it "ignores previously processed messages" do
       sender = ProfileFactory.create
       message = MessageFactory.create_received(sender: sender)
-      ReceivedMessageProcessor.new(username: sender.username, sent_at: message.sent_at).go
+      ReceivedMessageProcessor.new(username: sender.username, sent_at: message.sent_at).process_message
     end
 
     context "when processing new messages" do
@@ -15,7 +22,7 @@ RSpec.describe ReceivedMessageProcessor do
           sent_at: Time.now,
           content: "foo",
           profile_page: test_file_content('emma.html')
-        ).go
+        ).process_message
       end
 
       it "creates a profile if one doesn't exist" do
@@ -25,7 +32,7 @@ RSpec.describe ReceivedMessageProcessor do
             sent_at: Time.now,
             content: "foo",
             profile_page: test_file_content('emma.html')
-          ).go
+          ).process_message
         }.to change(Profile, :count).by(1)
       end
 
@@ -38,7 +45,7 @@ RSpec.describe ReceivedMessageProcessor do
             sent_at: Time.now,
             content: "foo",
             profile_page: test_file_content('emma.html')
-          ).go
+          ).process_message
         }.to_not change(Profile, :count)
       end
     end

@@ -35,7 +35,7 @@ private
     sent_at = parse_msg_date(message_link.search('.inbox-message-recieved-date').text)
     Log.info "#{self.class.name}: processing message from #{username} at #{sent_at}"
 
-    message_processor_class.new(
+    message_processor.process_message(
       username: username,
       sent_at: sent_at,
       content: extract_message_content(message_link),
