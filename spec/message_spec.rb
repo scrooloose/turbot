@@ -1,6 +1,38 @@
 require File.dirname(__FILE__) + "/spec_helper"
 
 RSpec.describe Message do
+  describe ".sent" do
+    it "gets all messages sent from me" do
+      sent = MessageFactory.create_sent
+      MessageFactory.create_received
+
+      expect(Message.sent.to_a).to eq([sent])
+    end
+  end
+
+  describe ".received" do
+    it "gets all messages received by me" do
+      MessageFactory.create_sent
+      received = MessageFactory.create_received
+
+      expect(Message.received.to_a).to eq([received])
+    end
+  end
+
+  describe ".responses" do
+    it "gets all messages received by me in response to messages sent by me" do
+      p = ProfileFactory.create
+      MessageFactory.create_sent(recipient: p, sent_at: Time.now - 60)
+      response = MessageFactory.create_received(sender: p, sent_at: Time.now - 30)
+
+      #some controls
+      MessageFactory.create_sent
+      MessageFactory.create_received
+
+      expect(Message.responses.to_a).to eq([response])
+    end
+  end
+
   describe ".create_sent_message" do
     let(:recipient) { ProfileFactory.create }
     subject { Message.create_sent_message(recipient: recipient, content: "foo") }
