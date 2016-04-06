@@ -13,6 +13,8 @@ class ReceivedMessageProcessor
   end
 
   def process_message
+    Log.info "#{self.class.name}: processing message from #{username} at #{sent_at}"
+
     unless Message.received?(username: username, sent_at: sent_at)
       Message.create_received_message(sender: sender_profile, content: content, sent_at: sent_at)
     end

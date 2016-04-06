@@ -16,7 +16,14 @@ private
     messages = inbox_page.search(".inbox-message-wrapper")
 
     messages.each do |message|
-      process_message(message)
+
+      message_processor.process_message(
+        username: extract_username(message),
+        sent_at: extract_sent_at(message),
+        content: extract_message_content(message),
+        profile_page: extract_profile_page(message)
+      )
+
       wait_between_actions
     end
 
@@ -27,24 +34,26 @@ private
     end
   end
 
-  def process_message(message)
-    profile_link = message.search("a[href*='viewprofile']").first
-    message_link = message.search("a[id*='inbox-readmessage-link-']").first
-
-    username = message_link.search('.inbox-message-user-name, .inbox-message-user-name-upgraded').text.strip.split.first
-    sent_at = parse_msg_date(message_link.search('.inbox-message-recieved-date').text)
-    Log.info "#{self.class.name}: processing message from #{username} at #{sent_at}"
-
-    message_processor.process_message(
-      username: username,
-      sent_at: sent_at,
-      content: extract_message_content(message_link),
-      profile_page: visit(profile_link['href']).body
-    ).go
+  def extract_profile_page(message)
+    link = message.search("a[href*='viewprofile']").first
+    visit(link['href']).body
   end
 
-  def extract_message_content(link)
-    message_page = visit(link['href'])
+  def extract_username(message)
+    message_link(message).search('.inbox-message-user-name, .inbox-message-user-name-upgraded').text.strip.split.first
+  end
+
+  def extract_sent_at(message)
+    date_str = message_link(message).search('.inbox-message-recieved-date').text
+    parse_msg_date(date_str)
+  end
+
+  def message_link(message)
+    message.search("a[id*='inbox-readmessage-link-']").first
+  end
+
+  def extract_message_content(message)
+    message_page = visit(message_link(message)['href'])
     message_page.search('.msg-row .message-content').last.text
   end
 
