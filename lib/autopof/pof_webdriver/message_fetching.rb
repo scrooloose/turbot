@@ -17,11 +17,13 @@ private
 
     messages.each do |message|
 
+      extractor = PofMessageInfoExtractor.new(message, agent)
+
       message_processor.process_message(
-        username: extract_username(message),
-        sent_at: extract_sent_at(message),
-        content: extract_message_content(message),
-        profile_page: extract_profile_page(message)
+        username: extractor.username,
+        sent_at: extractor.sent_at,
+        content: extractor.message_content,
+        profile_page: extractor.profile_page_content
       )
 
       wait_between_actions
@@ -33,31 +35,43 @@ private
       check_for_responses(next_page)
     end
   end
+end
 
-  def extract_profile_page(message)
-    link = message.search("a[href*='viewprofile']").first
-    visit(link['href']).body
+class PofMessageInfoExtractor
+  attr_reader :msg_elem, :agent
+
+  def initialize(msg_elem, agent)
+    @msg_elem = msg_elem
+    @agent = agent
   end
 
-  def extract_username(message)
-    message_link(message).search('.inbox-message-user-name, .inbox-message-user-name-upgraded').text.strip.split.first
+  def profile_page_content
+    link = msg_elem.search("a[href*='viewprofile']").first
+    agent.get(link['href']).body
   end
 
-  def extract_sent_at(message)
-    date_str = message_link(message).search('.inbox-message-recieved-date').text
+  def username
+    message_link.search('.inbox-message-user-name, .inbox-message-user-name-upgraded').text.strip.split.first
+  end
+
+  def sent_at
+    date_str = message_link.search('.inbox-message-recieved-date').text
     parse_msg_date(date_str)
   end
 
-  def message_link(message)
-    message.search("a[id*='inbox-readmessage-link-']").first
+  def message_content
+    message_page = agent.get(message_link['href'])
+    message_page.search('.msg-row .message-content').last.text
   end
 
-  def extract_message_content(message)
-    message_page = visit(message_link(message)['href'])
-    message_page.search('.msg-row .message-content').last.text
+private
+
+  def message_link
+    @message_link ||= msg_elem.search("a[id*='inbox-readmessage-link-']").first
   end
 
   def parse_msg_date(str)
     DateTime.strptime(str, "%m/%d/%Y %H:%M:%S %p").strftime("%F %T")
   end
+
 end
