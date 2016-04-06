@@ -27,6 +27,8 @@ RSpec.describe MessageBuilder do
       test_likes(args.merge(bio: "In terms of hobbies, I enjoy biking and until recently played in a ladies darts team."))
       test_likes(args.merge(bio: "This girl loves positivity, biking, cheekiness, kisses, theatre and live performance. "))
       test_likes(args.merge(bio: "In my spare time I like to do the usual watch films and biking"))
+      test_likes(args.merge(bio: "I am into biking"))
+      test_likes(args.merge(bio: "I'm into biking"))
     end
 
     it "doesn't recognize anti-interests" do

@@ -21,7 +21,7 @@ class BioParser
 private
 
   def like_phrases_regex
-    '\blikes?|loves?|enjoy|am happiest|am happy|hobbies|passion|really into|spare time'
+    '\blikes?|loves?|enjoy|am happiest|am happy|hobbies|passion|i\'?m into|i am into|really into|spare time'
   end
 
   def like_lists
