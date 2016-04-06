@@ -31,7 +31,7 @@ RSpec.describe MessageBuilder do
       test_likes(args.merge(bio: "I'm into biking"))
     end
 
-    it "doesn't recognize anti-interests" do
+    pending "doesn't recognize anti-interests" do
       bp = BioParser.new(bio: "I hate biking and football", topics: [biking_topic])
       expect(bp.matching_topics).to be_empty
 
