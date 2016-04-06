@@ -35,11 +35,6 @@ class ProfilePageParser
     page.css('input[name="sendto"]').first.attr('value')
   end
 
-  def bio_parser
-    Log.debug "#{self.class.name}: parsing bio_parser"
-    @bio_parser ||= BioParser.new(bio)
-  end
-
 private
 
   def page
