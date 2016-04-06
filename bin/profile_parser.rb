@@ -11,7 +11,7 @@ puts "\nInterests\n-------------"
 pp profile_page.interests
 
 puts "\nInterests parsed from bio\n-------------"
-pp BioParser.new(bio: profile_page.bio, topics: TopicRegistryInstance.topics).matching_topics.map(&:name)
+pp BioParser.new(bio: profile_page.bio).matching_topics.map(&:name)
 
 puts "\nBio\n-------------"
 pp profile_page.bio

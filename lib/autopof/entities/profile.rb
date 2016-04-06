@@ -85,7 +85,7 @@ private
     @parse_page_contents_done = true
 
     profile_page_parser = ProfilePageParser.new(page_content: page_content)
-    bio_parser = BioParser.new(bio: profile_page_parser.bio, topics: TopicRegistryInstance.topics)
+    bio_parser = BioParser.new(bio: profile_page_parser.bio)
 
     @bio ||= profile_page_parser.bio
     @name ||= profile_page_parser.name

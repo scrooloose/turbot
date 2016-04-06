@@ -1,7 +1,7 @@
 class BioParser
   attr_reader :bio, :topics
 
-  def initialize(bio: [], topics: [])
+  def initialize(bio: [], topics: TopicRegistryInstance.topics)
     @bio = bio
     @topics = topics
   end
