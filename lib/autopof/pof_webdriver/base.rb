@@ -13,12 +13,13 @@ class PofWebdriver::Base
   include PofWebdriver::MessageFetching
   include PofWebdriver::MessageSending
 
-  attr_reader :message_processor, :sleep_strategy, :profile_cacher
+  attr_reader :message_processor, :sleep_strategy, :profile_cacher, :agent
 
-  def initialize(message_processor: ReceivedMessageProcessor, profile_cacher: ProfileCacher, sleep_strategy: SleepStrategy.new)
+  def initialize(message_processor: ReceivedMessageProcessor, profile_cacher: ProfileCacher, sleep_strategy: SleepStrategy.new, agent: Mechanize.new)
     @message_processor = message_processor
     @sleep_strategy = sleep_strategy
     @profile_cacher = profile_cacher
+    @agent = agent
   end
 
 protected
@@ -33,10 +34,6 @@ protected
     login_form.username = Config['pof_username']
     login_form.password = Config['pof_password']
     login_form.submit
-  end
-
-  def agent
-    @agent ||= Mechanize.new
   end
 
   def visit(path)
