@@ -13,6 +13,10 @@ class Profile < Sequel::Model(:profiles)
     where("profiles.id != #{Config['user_profile_id']}")
   end
 
+  def_dataset_method(:available) do
+    where("profiles.unavailable IS NULL OR profiles.unavailable = 0")
+  end
+
   def self.messagable(number)
     rv = []
     unmessaged.excluding_me.order(Sequel.lit('RAND()')).each_page(100) do |page|

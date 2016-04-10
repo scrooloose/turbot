@@ -18,7 +18,24 @@ RSpec.describe Profile do
       ProfileFactory.create_messagable
 
       expect(Profile.messagable(2).to_a.size).to eq(2)
+    end
 
+    it "doesn't return unavailable profiles" do
+      messagable_profile = ProfileFactory.create_messagable
+
+      unavailable_profile = ProfileFactory.create_messagable
+      unavailable_profile.unavailable = true
+      unavailable_profile.save(raise_on_failure: true)
+
+      expect(Profile.messagable(1).to_a).to eq([messagable_profile])
+    end
+  end
+
+  describe ".available" do
+    it "returns profiles that aren't marked as unavailable" do
+      ProfileFactory.create(unavailable: true)
+      p = ProfileFactory.create(unavailable: false)
+      expect(Profile.available.to_a).to match_array([Profile.me, p])
     end
   end
 
