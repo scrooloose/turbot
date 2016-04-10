@@ -36,7 +36,7 @@ end
 namespace :bootstrap do
   desc 'Setup Profile. Required: ENV["AUTOPOF_ENV"], ENV["pof_profile_id"]'
   task setup_profile: :environment do
-    pof_profile_id = ENV['pof_profile_id']
+    pof_profile_id = ENV['pof_profile_id'] || raise("ENV['pof_profile_id'] required")
 
     require 'net/http'
     page = Net::HTTP.get('www.pof.com', "/viewprofile.aspx?profile_id=#{pof_profile_id}")
