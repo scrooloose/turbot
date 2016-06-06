@@ -19,12 +19,18 @@ private
 
       extractor = PofMessageInfoExtractor.new(message, agent)
 
-      message_processor.process_message(
-        username: extractor.username,
-        sent_at: extractor.sent_at,
-        content: extractor.message_content,
-        profile_page: extractor.profile_page_content
-      )
+      begin
+        message_processor.process_message(
+          username: extractor.username,
+          sent_at: extractor.sent_at,
+          content: extractor.message_content,
+          profile_page: extractor.profile_page_content
+        )
+      rescue StandardError => e
+        Log.info(".process_message failed for message content: #{message}", stdout: true)
+        Log.info(e.backtrace, stdout: true)
+        next
+      end
 
       wait_between_actions
     end
