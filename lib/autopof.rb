@@ -29,9 +29,6 @@ DB = Sequel.connect(
 )
 DB.extension(:pagination)
 
-Log = Logger.new("#{ROOT_DIR}/log/#{AUTOPOF_ENV}.log")
-Log.level = Logger::INFO
-
 lib_dir = File.dirname(__FILE__) + "/autopof"
 require "#{lib_dir}/config"
 require "#{lib_dir}/entities/message"
@@ -45,9 +42,13 @@ require "#{lib_dir}/profile_cacher"
 require "#{lib_dir}/pof_session"
 require "#{lib_dir}/sleep_strategy"
 require "#{lib_dir}/pof_webdriver/base.rb"
+require "#{lib_dir}/my_logger.rb"
 
 require "#{lib_dir}/topic"
 require "#{lib_dir}/topic_registry"
+
+Log = MyLogger.new("#{ROOT_DIR}/log/#{AUTOPOF_ENV}.log")
+Log.level = Logger::INFO
 
 TopicRegistryInstance = TopicRegistry.new
 TopicRegistryInstance.add_from_file("#{ROOT_DIR}/config/config.yml") unless AUTOPOF_ENV == :test
