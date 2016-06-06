@@ -35,7 +35,13 @@ private
 
   def cache_profile(page)
     Log.info "#{self.class.name} - caching: #{page.uri.to_s}"
-    profile_cacher.cache(page.body)
+    begin
+      profile_cacher.cache(page.body)
+    rescue StandardError => e
+      Log.info(".cache_profile failed for profile page: #{page.body}", stdout: true)
+      Log.info(e.backtrace, stdout: true)
+      next
+    end
   end
 
 end
