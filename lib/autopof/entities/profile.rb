@@ -79,9 +79,10 @@ private
 
   def clear_derived_fields
     DerivedFields.each do |f|
-      remove_instance_variable("@#{f}".to_sym)
+      vname = "@#{f}".to_sym
+      remove_instance_variable(vname) if instance_variable_defined?(vname)
     end
-    remove_instance_variable("@parse_page_contents_done".to_sym)
+    @parse_page_contents_done = false
   end
 
   def parse_page_contents

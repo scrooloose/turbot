@@ -1,13 +1,17 @@
 require File.dirname(__FILE__) + "/spec_helper"
 
 RSpec.describe Messager do
-  def messager(**args)
-    Messager.new(
-      { dry_run: false,
-        webdriver: object_double(PofWebdriver::Base.new),
-        sleep_strategy: SleepStrategy.no_sleep
-      }.merge(args)
-    )
+  def messager(profiles: nil, **args)
+    opts = {
+      dry_run: false,
+      webdriver: object_double(PofWebdriver::Base.new),
+      sleep_strategy: SleepStrategy.no_sleep,
+      profile_repo: Profile
+    }.merge(args)
+
+    opts.merge!(message_count: profiles.count) if profiles
+
+    Messager.new(opts)
   end
 
 
@@ -15,7 +19,7 @@ RSpec.describe Messager do
     it "doesn't send messages" do
       wd = object_double(PofWebdriver::Base.new)
       expect(wd).to_not receive(:send_message)
-      messager(dry_run: true, profiles: [ProfileFactory.build_messagable], webdriver: wd).go
+      messager(dry_run: true, profiles: [ProfileFactory.create_messagable], webdriver: wd).go
     end
   end
 
@@ -24,20 +28,17 @@ RSpec.describe Messager do
       wd = object_double(PofWebdriver::Base.new)
       expect(wd).to receive(:send_message).and_return(true)
 
-      messager(profiles: [ProfileFactory.build_messagable], webdriver: wd).go
+      messager(profiles: [ProfileFactory.create_messagable], webdriver: wd).go
     end
   end
 
   it "messages the given profiles" do
-    profiles = [
-      ProfileFactory.create_messagable,
-      ProfileFactory.create_messagable
-    ]
+    profiles = [ProfileFactory.create_messagable, ProfileFactory.create_messagable]
 
     wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).twice.and_return(true)
 
-    messager(webdriver: wd, profiles: profiles).go
+    messager(profiles: profiles, webdriver: wd, message_count: 2).go
   end
 
   it "retries when messaging fails" do

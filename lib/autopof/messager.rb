@@ -1,9 +1,10 @@
 class Messager
-  attr_reader :dry_run, :profiles, :webdriver, :sleep_strategy, :attempts
+  attr_reader :dry_run, :profile_repo, :message_count, :webdriver, :sleep_strategy, :attempts
 
-  def initialize(dry_run: true, profiles: nil, webdriver: PofWebdriver::Base.new, sleep_strategy: SleepStrategy.new, attempts: 3)
+  def initialize(dry_run: true, profile_repo: nil, message_count: 0, webdriver: PofWebdriver::Base.new, sleep_strategy: SleepStrategy.new, attempts: 3)
     @dry_run = dry_run
-    @profiles = profiles
+    @profile_repo = profile_repo
+    @message_count = message_count
     @webdriver = webdriver
     @sleep_strategy = sleep_strategy
     @attempts = attempts
@@ -19,6 +20,10 @@ class Messager
   end
 
 private
+  def profiles
+    @profiles ||= profile_repo.messagable(message_count)
+  end
+
   def attempt_to_send(msg, profile)
     cur_attempt = 1
 
