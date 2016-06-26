@@ -23,7 +23,7 @@ class ReceivedMessageProcessor
 private
 
   def sender_profile
-    if profile = Profile.find(username: username)
+    if profile = Profile.find_by(username: username)
       return profile
     end
 

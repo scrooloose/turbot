@@ -5,7 +5,7 @@ require "nokogiri"
 require "byebug"
 require "open-uri"
 require "pp"
-require "sequel"
+require "active_record"
 require "yaml"
 require "mechanize"
 require "nokogiri"
@@ -23,11 +23,9 @@ AUTOPOF_ENV ||= if ENV['AUTOPOF_ENV']
                   :development
                 end
 
-Sequel::Model.plugin :timestamps
-DB = Sequel.connect(
+ActiveRecord::Base.establish_connection(
   YAML.load_file("#{ROOT_DIR}/config/db.yml")[AUTOPOF_ENV.to_s]
 )
-DB.extension(:pagination)
 
 lib_dir = File.dirname(__FILE__) + "/autopof"
 require "#{lib_dir}/config"

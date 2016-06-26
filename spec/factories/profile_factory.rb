@@ -4,13 +4,15 @@ module ProfileFactory
   end
 
   def self.create(params = {})
-    build(params).save
+    p = build(params)
+    p.save
+    p
   end
 
   def self.from_test_fixture(fname)
     content = File.read(test_file_path(fname))
     parser = ProfilePageParser.new(page_content: content)
-    Profile.create(
+    Profile.create!(
       username: parser.username,
       pof_key: parser.pof_key,
       page_content: content
@@ -22,7 +24,9 @@ module ProfileFactory
   end
 
   def self.create_messagable(params = {})
-    build_messagable(params).save
+    p = build_messagable(params)
+    p.save
+    p
   end
 
 private

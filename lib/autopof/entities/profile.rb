@@ -1,26 +1,17 @@
-class Profile < Sequel::Model(:profiles)
+class Profile < ActiveRecord::Base
   class NotEnoughMessagableProfiles < StandardError; end
 
-  def_dataset_method(:unmessaged) do
-    where("NOT EXISTS (SELECT * FROM messages WHERE messages.recipient_profile_id = profiles.id)")
-  end
+  scope :unmessaged,  -> { where("NOT EXISTS (SELECT * FROM messages WHERE messages.recipient_profile_id = profiles.id)") }
+  scope :messaged, -> { where("EXISTS (SELECT * FROM messages WHERE messages.recipient_profile_id = profiles.id)") }
+  scope :excluding_me, -> { where("profiles.id != #{Config['user_profile_id']}") }
+  scope :available, -> { where("profiles.unavailable IS NULL OR profiles.unavailable = 0") }
 
-  def_dataset_method(:messaged) do
-    where("EXISTS (SELECT * FROM messages WHERE messages.recipient_profile_id = profiles.id)")
-  end
-
-  def_dataset_method(:excluding_me) do
-    where("profiles.id != #{Config['user_profile_id']}")
-  end
-
-  def_dataset_method(:available) do
-    where("profiles.unavailable IS NULL OR profiles.unavailable = 0")
-  end
+  has_many :messages
 
   def self.messagable(number)
     rv = []
-    unmessaged.excluding_me.order(Sequel.lit('RAND()')).each_page(100) do |page|
-      page.each do |profile|
+    unmessaged.excluding_me.order('RAND()').find_in_batches(batch_size: 500) do |batch|
+      batch.each do |profile|
         rv << profile if profile.matches_any_topic?
         return rv if rv.size == number
       end
@@ -30,7 +21,7 @@ class Profile < Sequel::Model(:profiles)
   end
 
   def self.me
-    @me ||= find(id: Config['user_profile_id'])
+    @me ||= find(Config['user_profile_id'])
   end
 
   #TODO: these should all be readonly, but are read/write for easier testing
@@ -57,7 +48,7 @@ class Profile < Sequel::Model(:profiles)
     topics_for_interests(interests).any?
   end
 
-  def refresh
+  def reload
     super
     clear_derived_fields
     parse_page_contents
@@ -70,9 +61,9 @@ class Profile < Sequel::Model(:profiles)
   end
 
   def inspect
-    v = values.clone
-    v[:page_content] = v[:page_content].first(20) + " ..."
-    "#<#{model.name} @values=#{v}>"
+    a = attributes.clone
+    a["page_content"] = a["page_content"].first(20) + " ..."
+    "#<#{self.class.name} @attributes=#{a}>"
   end
 
 private

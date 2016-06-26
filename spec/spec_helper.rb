@@ -32,7 +32,7 @@ def root_dir
 end
 
 #hack to make sure Profile.me works
-Profile.where('id > 0').delete #delete all
+Profile.where('id > 0').destroy_all
 Config['user_profile_id'] = ProfileFactory.from_test_fixture('me.html').id
 
 RSpec.configure do |config|

@@ -1,20 +1,18 @@
-class Message < Sequel::Model(:messages)
-  def_dataset_method(:sent) do
-    where(sender_profile_id: Profile.me.id)
-  end
+class Message < ActiveRecord::Base
+  scope :sent, ->{ where(sender_profile_id: Profile.me.id) }
+  scope :received, -> { where(recipient_profile_id: Profile.me.id) }
 
-  def_dataset_method(:received) do
-    where(recipient_profile_id: Profile.me.id)
-  end
+  scope :responses, -> {
+    select('*').
+    from('messages as received_msgs').
+    where("received_msgs.recipient_profile_id" => Profile.me.id).
+    where('EXISTS (SELECT *
+                   FROM messages
+                   WHERE messages.recipient_profile_id = received_msgs.sender_profile_id)')
+  }
 
-  def_dataset_method(:responses) do
-    from(Sequel.lit('messages AS received_msgs')).
-    where(recipient_profile_id: Profile.me.id).
-    where('EXISTS (SELECT * FROM messages WHERE recipient_profile_id = received_msgs.sender_profile_id)')
-  end
-
-  many_to_one :sender_profile, key: :sender_profile_id, class: :Profile
-  many_to_one :recipient_profile, key: :recipient_profile_id, class: :Profile
+  belongs_to :sender_profile, class_name: "Profile"
+  belongs_to :recipient_profile, class_name: "Profile"
 
   def self.create_sent_message(recipient: nil, content: nil, sent_at: Time.now)
     create(recipient_profile_id: recipient.id, content: content, sender_profile_id: Profile.me.id, sent_at: sent_at)
@@ -25,6 +23,6 @@ class Message < Sequel::Model(:messages)
   end
 
   def self.received?(username: nil, sent_at: nil)
-    join(:profiles, id: :sender_profile_id).where(profiles__username: username, messages__sent_at: sent_at).any?
+    received.joins(:sender_profile).where("profiles.username = ?", username).where("messages.sent_at" => sent_at).any?
   end
 end

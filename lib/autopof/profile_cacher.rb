@@ -11,8 +11,8 @@ class ProfileCacher
 
   def cache
     parser = ProfilePageParser.new(page_content: profile_page_body)
-    profile = if Profile.where(pof_key: parser.pof_key).any?
-                Profile.find(pof_key: parser.pof_key)
+    profile = if Profile.exists?(pof_key: parser.pof_key)
+                Profile.find_by!(pof_key: parser.pof_key)
               else
                 Profile.new(username: parser.username, pof_key: parser.pof_key)
               end
