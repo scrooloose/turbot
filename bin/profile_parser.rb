@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require File.dirname(__FILE__) + "/../lib/autopof"
+require File.dirname(__FILE__) + "/../lib/turbot"
 require 'pp'
 
 profile_page = ProfilePageParser.new(page_content: open(ARGV.first).read)

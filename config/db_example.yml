@@ -2,16 +2,16 @@ development:
   adapter: 'mysql2'
   user: 'root'
   password: 'foobar'
-  database: 'autopof_dev'
+  database: 'turbot_dev'
 
 test:
   adapter: 'mysql2'
   user: 'root'
   password: 'foobar'
-  database: 'autopof_test'
+  database: 'turbot_test'
 
 prod:
   adapter: 'mysql2'
   user: 'root'
   password: 'foobar'
-  database: 'autopof_prod'
+  database: 'turbot_prod'

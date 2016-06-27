@@ -1,6 +1,6 @@
 module PofWebdriver::MessageSending
   def send_message(message: nil, profile: nil)
-    raise("Block real sending of messages in test. Should never see this.") if AUTOPOF_ENV == "test"
+    raise("Block real sending of messages in test. Should never see this.") if TURBOT_ENV == "test"
 
     Log.info "Sending message to #{profile.username}"
     login

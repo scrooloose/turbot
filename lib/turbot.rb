@@ -17,17 +17,17 @@ require "timecop"
 
 ROOT_DIR = File.dirname(__FILE__) + '/..'
 
-AUTOPOF_ENV ||= if ENV['AUTOPOF_ENV']
-                  ENV['AUTOPOF_ENV'].to_sym
+TURBOT_ENV ||= if ENV['TURBOT_ENV']
+                  ENV['TURBOT_ENV'].to_sym
                 else
                   :development
                 end
 
 ActiveRecord::Base.establish_connection(
-  YAML.load_file("#{ROOT_DIR}/config/db.yml")[AUTOPOF_ENV.to_s]
+  YAML.load_file("#{ROOT_DIR}/config/db.yml")[TURBOT_ENV.to_s]
 )
 
-lib_dir = File.dirname(__FILE__) + "/autopof"
+lib_dir = File.dirname(__FILE__) + "/turbot"
 require "#{lib_dir}/config"
 require "#{lib_dir}/entities/message"
 require "#{lib_dir}/entities/profile"
@@ -45,8 +45,8 @@ require "#{lib_dir}/my_logger.rb"
 require "#{lib_dir}/topic"
 require "#{lib_dir}/topic_registry"
 
-Log = MyLogger.new("#{ROOT_DIR}/log/#{AUTOPOF_ENV}.log")
+Log = MyLogger.new("#{ROOT_DIR}/log/#{TURBOT_ENV}.log")
 Log.level = Logger::INFO
 
 TopicRegistryInstance = TopicRegistry.new
-TopicRegistryInstance.add_from_file("#{ROOT_DIR}/config/config.yml") unless AUTOPOF_ENV == :test
+TopicRegistryInstance.add_from_file("#{ROOT_DIR}/config/config.yml") unless TURBOT_ENV == :test

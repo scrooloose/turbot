@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require File.dirname(__FILE__) + "/../lib/autopof"
+require File.dirname(__FILE__) + "/../lib/turbot"
 
 search_pages_to_process = ENV['pages'] && ENV['pages'].to_i || 3
 message_count = ENV['message_limit'] && ENV['message_limit'].to_i || 2

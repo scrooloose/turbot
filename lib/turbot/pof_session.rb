@@ -36,7 +36,7 @@ private
   end
 
   def handle_error(e)
-    if AUTOPOF_ENV == "production"
+    if TURBOT_ENV == "production"
       body = e.message + "\n" + e.backtrace.join("\n")
       Pony.mail(to: error_email, from: error_email, subject: 'Pofbot Error', body: body)
     else

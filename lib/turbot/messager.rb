@@ -38,7 +38,7 @@ private
         profile.make_unavailable!
         #vomit out stuff to stdout since cron will email that to us - i.e.
         #effectively emailing us the error report
-        if AUTOPOF_ENV != 'test'
+        if TURBOT_ENV != 'test'
           puts "Failed to send message to #{profile.username}"
           puts e.message
           puts e.backtrace

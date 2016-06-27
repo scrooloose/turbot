@@ -1,6 +1,6 @@
-AUTOPOF_ENV='test'
+TURBOT_ENV='test'
 
-require File.dirname(__FILE__) + "/../lib/autopof"
+require File.dirname(__FILE__) + "/../lib/turbot"
 require 'database_cleaner'
 DatabaseCleaner.strategy = :transaction
 
