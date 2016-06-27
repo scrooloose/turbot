@@ -5,27 +5,3 @@ name: Rodney
 admin_email: foo@bar.com
 
 user_profile_id: 1
-
-topics:
-  - name: "A name of the topic"
-    interest_matchers:
-      - 'an array of regexes without...'
-      - '... any surrounding slashes e.g.'
-      - '^a.*regex$'
-    message: "The message that should be sent if this topic matches."
-
-  #examples:
-
-  - name: "Biking"
-    interest_matchers:
-      - '(?<!motor |motor)bik(e|ing)|cycling'
-      - '(bike|cycle) ?touring'
-    message: "I see you're into biking. Have you been on any good rides lately? In the last couple of years I've been quite taken with the road riding in the UK."
-
-  - name: "Cooking"
-    interest_matchers: ['cook(ing)?']
-    message: "I also enjoy an epic session in the kitchen. Have you cooked anything awesome lately? I've recently been obsessing over curry again after stealing some secret techniques from a friend. Yumm!"
-
-  - name: "Game of Thrones"
-    interest_matchers: ['game of thrones']
-    message: "I also (like everyone it seems) have been following Game of Thrones over the years. That show is pretty addictive, but they should definitely give up and rename it to Game of Porn!"

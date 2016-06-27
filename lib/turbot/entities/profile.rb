@@ -90,6 +90,6 @@ private
   end
 
   def topics_for_interests(interests)
-    interests.map {|i| TopicRegistryInstance.matching(i)}.compact.flatten.to_set
+    interests.map {|i| Topic.matching(i)}.compact.flatten.to_set
   end
 end

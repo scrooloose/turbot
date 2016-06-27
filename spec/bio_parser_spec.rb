@@ -8,11 +8,11 @@ RSpec.describe MessageBuilder do
     end
 
     let :biking_topic do
-      biking_topic = Topic.new(name: "biking", interest_matchers: ['biking', 'cycling'], message: "foo")
+      biking_topic = TopicFactory.build(name: "biking", interest_matchers: ['biking', 'cycling'], message: "foo")
     end
 
     let :control_topic do
-      control_topic = Topic.new(name: "xxx", interest_matchers: ['yyy'], message: "zzz")
+      control_topic = TopicFactory.build(name: "xxx", interest_matchers: ['yyy'], message: "zzz")
     end
 
     it "recognizes interest matchers in 'like sentences'" do
@@ -113,7 +113,7 @@ RSpec.describe MessageBuilder do
         horses
         blarg
       EOS
-      horse_topic = Topic.new(name: "horse topic", interest_matchers: ['horses'], message: "foo")
+      horse_topic = TopicFactory.build(name: "horse topic", interest_matchers: ['horses'], message: "foo")
       bp = BioParser.new(bio: bio, topics: [biking_topic, horse_topic])
 
       expect(bp.matching_topics).to match_array([biking_topic, horse_topic])
