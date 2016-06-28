@@ -6,7 +6,8 @@ RSpec.describe Messager do
       dry_run: false,
       webdriver: object_double(PofWebdriver::Base.new),
       sleep_strategy: SleepStrategy.no_sleep,
-      profile_repo: Profile
+      profile_repo: ProfileFactory.create,
+      sender: UserFactory.create
     }.merge(args)
 
     opts.merge!(message_count: profiles.count) if profiles

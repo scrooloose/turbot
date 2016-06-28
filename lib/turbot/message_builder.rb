@@ -1,10 +1,11 @@
 class MessageBuilder
   class NoMatchingTopicError < StandardError; end
 
-  attr_reader :profile
+  attr_reader :profile, :sender_user
 
-  def initialize(profile)
+  def initialize(profile, sender_user: nil)
     @profile = profile
+    @sender_user = sender_user
   end
 
   def message
@@ -30,6 +31,6 @@ private
   end
 
   def signoff
-    Config['name']
+    sender_user.name
   end
 end

@@ -1,8 +1,9 @@
 class Messager
-  attr_reader :dry_run, :profile_repo, :message_count, :webdriver, :sleep_strategy, :attempts
+  attr_reader :dry_run, :sender, :profile_repo, :message_count, :webdriver, :sleep_strategy, :attempts
 
-  def initialize(dry_run: true, profile_repo: nil, message_count: 0, webdriver: PofWebdriver::Base.new, sleep_strategy: SleepStrategy.new, attempts: 3)
+  def initialize(dry_run: true, sender: nil, profile_repo: nil, message_count: 0, webdriver: PofWebdriver::Base.new, sleep_strategy: SleepStrategy.new, attempts: 3)
     @dry_run = dry_run
+    @sender = sender
     @profile_repo = profile_repo
     @message_count = message_count
     @webdriver = webdriver
@@ -12,7 +13,7 @@ class Messager
 
   def go
     profiles.each do |profile|
-      msg_text = MessageBuilder.new(profile).message
+      msg_text = MessageBuilder.new(profile, sender_user: sender).message
       Log.info("Messenger#go - Sending message to #{profile.username}. Message: #{msg_text}")
       attempt_to_send(msg_text, profile)
       sleep_strategy.sleep
@@ -29,7 +30,7 @@ private
 
     begin
       webdriver.send_message(message: msg, profile: profile) unless dry_run
-      Message.create_sent_message(recipient: profile, content: msg)
+      sender.profile.sent_message(recipient: profile, content: msg)
     rescue PofWebdriver::Error => e
       if cur_attempt <= attempts
         cur_attempt += 1

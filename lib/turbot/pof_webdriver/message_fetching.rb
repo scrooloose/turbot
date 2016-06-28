@@ -24,10 +24,12 @@ private
           username: extractor.username,
           sent_at: extractor.sent_at,
           content: extractor.message_content,
-          profile_page: extractor.profile_page_content
+          profile_page: extractor.profile_page_content,
+          recipient: user.profile
         )
       rescue StandardError => e
         Log.info(".process_message failed for message content: #{message}", stdout: true)
+        Log.info(e.message, stdout: true)
         Log.info(e.backtrace, stdout: true)
         next
       end

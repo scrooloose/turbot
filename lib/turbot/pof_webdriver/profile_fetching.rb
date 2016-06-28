@@ -39,6 +39,7 @@ private
       profile_cacher.cache(page.body)
     rescue StandardError => e
       Log.info(".cache_profile failed for profile page: #{page.body}", stdout: true)
+      Log.info(e.message, stdout: true)
       Log.info(e.backtrace, stdout: true)
     end
   end

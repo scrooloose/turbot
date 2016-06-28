@@ -1,16 +1,22 @@
 class Profile < ActiveRecord::Base
   class NotEnoughMessagableProfiles < StandardError; end
 
-  scope :unmessaged,  -> { where("NOT EXISTS (SELECT * FROM messages WHERE messages.recipient_profile_id = profiles.id)") }
-  scope :messaged, -> { where("EXISTS (SELECT * FROM messages WHERE messages.recipient_profile_id = profiles.id)") }
-  scope :excluding_me, -> { where("profiles.id != #{Config['user_profile_id']}") }
+  scope :unmessaged, -> (id) { where("NOT EXISTS (SELECT *
+                                                  FROM messages
+                                                  WHERE messages.sender_profile_id = #{id} AND
+                                                        messages.recipient_profile_id = profiles.id)") }
+
   scope :available, -> { where("profiles.unavailable IS NULL OR profiles.unavailable = 0") }
+  scope :excluding, -> (id) { where.not(id: id) }
 
-  has_many :messages
+  has_many :sent_messages, class_name: "Message", foreign_key: "sender_profile_id"
+  has_many :received_messages, class_name: "Message", foreign_key: "recipient_profile_id"
 
-  def self.messagable(number)
+  has_one :user
+
+  def messagable(number)
     rv = []
-    unmessaged.excluding_me.order('RAND()').find_in_batches(batch_size: 500) do |batch|
+    self.class.unmessaged(id).excluding(self.id).order('RAND()').find_in_batches(batch_size: 500) do |batch|
       batch.each do |profile|
         rv << profile if profile.matches_any_topic?
         return rv if rv.size == number
@@ -20,8 +26,13 @@ class Profile < ActiveRecord::Base
     raise(NotEnoughMessagableProfiles, "Couldn't find #{number} messagable profiles")
   end
 
-  def self.me
-    @me ||= find(Config['user_profile_id'])
+  def responses
+    received_messages.
+    where("EXISTS (SELECT *
+                   FROM messages as sent_msgs
+                   WHERE sent_msgs.sender_profile_id = #{self.id} AND
+                         sent_msgs.recipient_profile_id = messages.sender_profile_id AND
+                         sent_msgs.sent_at < messages.sent_at)")
   end
 
   #TODO: these should all be readonly, but are read/write for easier testing
@@ -64,6 +75,18 @@ class Profile < ActiveRecord::Base
     a = attributes.clone
     a["page_content"] = a["page_content"].first(20) + " ..."
     "#<#{self.class.name} @attributes=#{a}>"
+  end
+
+  def sent_message(recipient: nil, content: nil, sent_at: Time.now)
+    Message.create!(recipient_profile_id: recipient.id, content: content, sender_profile_id: self.id, sent_at: sent_at)
+  end
+
+  def received_message(sender: nil, content: nil, sent_at: nil)
+    received_messages.create(recipient_profile_id: self.id, content: content, sender_profile_id: sender.id, sent_at: sent_at)
+  end
+
+  def received?(username: nil, sent_at: nil)
+    received_messages.joins(:sender_profile).where("profiles.username = ?", username).where("messages.sent_at" => sent_at).any?
   end
 
 private
