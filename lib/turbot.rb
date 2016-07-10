@@ -2,7 +2,6 @@ require "rubygems"
 require "bundler/setup"
 
 require "nokogiri"
-require "byebug"
 require "open-uri"
 require "pp"
 require "active_record"
@@ -12,8 +11,9 @@ require "nokogiri"
 require "logger"
 require "pony"
 require "securerandom"
-require "pry-byebug"
+require "pry"
 require "timecop"
+require "slop"
 
 ROOT_DIR = File.dirname(__FILE__) + '/..'
 
