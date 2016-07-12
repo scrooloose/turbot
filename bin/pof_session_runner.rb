@@ -3,6 +3,7 @@
 require File.dirname(__FILE__) + "/../lib/turbot"
 
 opts = Slop.parse do |o|
+  o.banner = "Usage: TURBOT_ENV=[env-name] ./bin/pof_session_runner.rb [options]"
   o.separator ""
   o.separator "Required"
   o.integer "-u", "--user-id", "ID of user to act as"
