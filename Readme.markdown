@@ -39,23 +39,31 @@ Create the databases and fill in the auth details.
 
 **Run the database migrations**
 
-Run `bundle exec rake db:migrate`
+```
+bundle exec rake db:migrate
+```
 
 This will create the tables etc.
 
 **Set up your POF user**
 
-Run `bundle exec irb -r ./lib/turbot`
+```
+bundle exec irb -r ./lib/turbot
+```
 
 Now create your user:
 
-`User.create!(pof_username: 'your-pof-login', pof_password: 'your-password', name: 'your-name')`
+```
+User.create!(pof_username: 'your-pof-login', pof_password: 'your-password', name: 'your-name')
+```
 
 Note: Your name is used to sign the messages you send.
 
 **Pull down your profile**
 
-Run `bundle exec rake bootstrap:setup_profile pof_profile_id=YOUR_ID`
+```
+bundle exec rake bootstrap:setup_profile pof_profile_id=YOUR_ID
+```
 
 Replace `YOUR_ID` with the POF ID. To find this, go to your profile page and look at the number on the end of the url.
 
@@ -68,7 +76,9 @@ out which profiles these can be sent to.
 
 There is an interface for this coming soon, but for now you must do it via something like PhpMyAdmin or via the console:
 
-Run `bundle exec irb -r ./lib/autopof`
+```
+bundle exec irb -r ./lib/autopof
+```
 
 Now create your first topic:
 
