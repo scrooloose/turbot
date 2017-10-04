@@ -43,6 +43,7 @@ require "#{lib_dir}/pof_session"
 require "#{lib_dir}/sleep_strategy"
 require "#{lib_dir}/pof_webdriver/base.rb"
 require "#{lib_dir}/my_logger.rb"
+require "#{lib_dir}/pof_message_info_extractor.rb"
 
 Log = MyLogger.new("#{ROOT_DIR}/log/#{TURBOT_ENV}.log")
 Log.level = Logger::INFO
