@@ -10,7 +10,6 @@
 
 Turbot is a dating bot for the [Plenty of Fish](https://www.pof.com/) dating site.
 
-
 Purpose
 =======
 
@@ -18,9 +17,10 @@ For a long time I found the world of internet dating to be quite painful. I
 sent out lots of messages and, regardless of how much effort I put in, received
 very few responses. Ow! My soul!
 
-The vast majority of the pain/time-wasting was in sending that first message. I
-realised that this activity (sending the first message) is not complicated and
-can be automated!  So I wrote a bot to do the job for me.
+The vast majority of the pain/time-wasting was in sending that first message -
+in reading through profiles to find someone interesting and then writing a message
+to them about something we have in common. I realised that this activity is not
+complicated and can be automated!  So I wrote a bot to do the job for me.
 
 Being single can suck, but we can program ourselves out of this hole!
 
@@ -65,16 +65,18 @@ Note: Your name is used to sign the messages you send.
 bundle exec rake bootstrap:setup_profile pof_profile_id=YOUR_ID
 ```
 
-Replace `YOUR_ID` with the POF ID. To find this, go to your profile page and look at the number on the end of the url.
+Replace `YOUR_ID` with the POF ID. To find this, go to your profile page and
+look at the number on the end of the url.
 
 Example: `http://www.pof.com/viewprofile.aspx?profile_id=1234567`
 
 **Create some topics**
 
-Now the fun part. You can create some canned messages and rules to figure
-out which profiles these can be sent to.
+Now the fun part. You can create some canned messages and rules to figure out
+which profiles these can be sent to.
 
-There is an interface for this coming soon, but for now you must do it via something like PhpMyAdmin or via the console:
+There is an interface for this coming soon, but for now you must do it via
+something like PhpMyAdmin or via the console:
 
 ```
 bundle exec irb -r ./lib/autopof
@@ -122,11 +124,71 @@ TURBOT_ENV=production ./bin/pof_session_runner.rb --user-id=1 --search-pages=1 -
 Topic Matching
 ==============
 
-Coming soon
+A topic consists of:
 
+1. A canned message that is sent to profiles matching this topic.
+2. A set of regular expressions that are checked against the interests, and
+   derived interests, of a profile. If one of the regular expressions matches,
+   then this profile is a candidate to receive the canned message.
 
-TODO
+How do we know what the interests are for a given profile? There are two
+methods. Firstly, a profile has an 'interests' section which is a comma
+separated list. This is trivial to match against.
+
+The second method is more involved, but necessary since many people don't use
+the proper 'interests' section but instead put lists of interests into their
+bio section. Turbot knows how to recognise the most common of these structures.
+For example if sentences like these someones bio:
+
+> I enjoy cycling, horse riding, card games and coffee.
+> In my spare time I go cycling, horse riding, card games and coffee.
+> In really enjoy cycling, horse riding, card games and coffee.
+
+Then turbot will correctly pick out 'cycling', 'horse riding', 'card games' and
+'coffee' as interests.
+
+Similarly, turbot can recognise vertical lists of things like this:
+
+> In my spare time I enjoy:
+> * cycling
+> * horse riding
+> * card games
+> * coffee
+
+Once turbot has a list of interests, it will check these against each Topic to
+see if it matches any of the Topic's matchers.
+
+For example:
+
+If a profile has the interest 'cycling' and we have a this Topic:
+
+```
+Topic:
+    name: Cycling
+    message: Hi there, I like cycling too ...
+    matchers: (?<!motor |motor)bik(e|ing)|cycling
+
+```
+
+Then this topic would match the profile and the message "Hi there, I like
+cycling too ..." could be sent to that profile.
+
+Todo
 ====
 
-Make the message extractor handle messages from POF admins - they don't have a
-profile, which goes against our assumptions.
+Convert the app into a Rails app, and use something like Activeadmin to admin
+the topics and users etc.
+
+Finish making the app multi-user. For example give each user their own set of
+Topics.
+
+Make turbot ignore messages from POF admins.
+
+Make the setup process a one line rake command, or some kind of a "wizard" web
+page.
+
+Finish testing PofMessageInfoExtractor - there are a couple of untested
+methods.
+
+Use VCR and record a tape so we can write an integration test of the whole
+engine starting from the pof_webdriver class.
