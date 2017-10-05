@@ -1,6 +1,13 @@
 #!/usr/bin/env ruby
+require "pathname"
+ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile", Pathname.new(__FILE__).realpath)
 
-require File.dirname(__FILE__) + "/../lib/turbot"
+require "rubygems"
+require "bundler/setup"
+require File.expand_path("../../config/environment", Pathname.new(__FILE__).realpath)
+
+require 'slop'
+require 'mechanize'
 
 opts = Slop.parse do |o|
   o.banner = "Usage: TURBOT_ENV=[env-name] ./bin/pof_session_runner.rb [options]"
@@ -27,7 +34,7 @@ end
 
 user = User.find(opts[:user_id])
 
-Log.info "Starting PofSession with search_pages_to_process: #{opts[:search_pages]}, message_count: #{opts[:messages]}, dry_run: #{opts.dry_run?}", stdout: true
+Rails.logger.debug "Starting PofSession with search_pages_to_process: #{opts[:search_pages]}, message_count: #{opts[:messages]}, dry_run: #{opts.dry_run?}"
 
 sleep_strategy = SleepStrategy.new
 wd = PofWebdriver::Base.new(sleep_strategy: sleep_strategy, user: user)
