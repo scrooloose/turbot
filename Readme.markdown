@@ -182,6 +182,8 @@ the topics and users etc.
 Finish making the app multi-user. For example give each user their own set of
 Topics.
 
+Clean up the Profile model a bit.
+
 Make turbot ignore messages from POF admins.
 
 Make the setup process a one line rake command, or some kind of a "wizard" web
