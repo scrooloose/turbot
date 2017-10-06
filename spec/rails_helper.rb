@@ -54,14 +54,4 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
-
-  config.before(:each) do
-    #A bunch of the specs just assume a biking topic exists - so just create it
-    #here. It seems a bit dodgy, but just do it until it becomes a problem.
-    TopicFactory.build(
-      name: "biking",
-      interest_matchers: ['(?<!motor |motor)bik(e|ing)|cycling', '(bike|cycle) ?touring'],
-      message: "I see you're into biking. Have you been on any good rides lately? In the last couple of years I've been quite taken with the road riding in the UK."
-    ).save!
-  end
 end

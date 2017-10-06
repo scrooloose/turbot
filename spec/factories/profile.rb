@@ -19,6 +19,11 @@ FactoryGirl.define do
         )
       end
     end
+
+    trait :emma do
+      pof_key "82945044"
+      page_content File.read(Rails.root.join('spec', 'test_files', 'emma.html'))
+    end
   end
 end
 

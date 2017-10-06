@@ -11,8 +11,8 @@ RSpec.describe ProfileCacher do
 
   describe "#cache" do
     it "update existing profiles" do
-      profile = ProfileFactory.from_test_fixture("emma.html")
-      new_profile_content = File.read(test_file_path("emma_with_different_bio.html"))
+      profile = create(:profile, :emma)
+      new_profile_content = test_file_content("emma_with_different_bio.html")
 
       expect {
         ProfileCacher.new(new_profile_content).cache

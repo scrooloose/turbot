@@ -10,8 +10,8 @@ RSpec.describe ReceivedMessageProcessor do
 
   describe "#process_message" do
     it "ignores previously processed messages" do
-      sender = ProfileFactory.create
-      receiver = ProfileFactory.create
+      sender = create(:profile)
+      receiver = create(:profile)
       message = sender.sent_message(recipient: receiver, content: "foo")
       ReceivedMessageProcessor.new(recipient: receiver, username: sender.username, sent_at: message.sent_at, content: "foo").process_message
     end
@@ -20,7 +20,7 @@ RSpec.describe ReceivedMessageProcessor do
       it "saves the message" do
         expect {
           ReceivedMessageProcessor.new(
-            recipient: ProfileFactory.create,
+            recipient: create(:profile),
             username: "foo",
             sent_at: Time.now,
             content: "foo",
@@ -31,7 +31,7 @@ RSpec.describe ReceivedMessageProcessor do
       end
 
       it "creates a profile if one doesn't exist" do
-        recipient = ProfileFactory.create
+        recipient = create(:profile)
 
         expect {
           ReceivedMessageProcessor.new(
@@ -45,8 +45,8 @@ RSpec.describe ReceivedMessageProcessor do
       end
 
       it "doesn't create a profile if it already exists" do
-        ProfileFactory.from_test_fixture('emma.html')
-        recipient = ProfileFactory.create
+        create(:profile, :emma)
+        recipient = create(:profile)
 
         expect {
           ReceivedMessageProcessor.new(

@@ -6,8 +6,8 @@ RSpec.describe Messager do
       dry_run: false,
       webdriver: object_double(PofWebdriver::Base.new),
       sleep_strategy: SleepStrategy.no_sleep,
-      profile_repo: ProfileFactory.create,
-      sender: UserFactory.create
+      profile_repo: create(:profile),
+      sender: create(:user)
     }.merge(args)
 
     opts.merge!(message_count: profiles.count) if profiles
@@ -15,12 +15,19 @@ RSpec.describe Messager do
     Messager.new(opts)
   end
 
+  before do
+    create(:topic, :likes_biking)
+  end
+
+  def messagable_profile
+    create(:profile, interests: ['biking'])
+  end
 
   context "when dry_run is true" do
     it "doesn't send messages" do
       wd = object_double(PofWebdriver::Base.new)
       expect(wd).to_not receive(:send_message)
-      messager(dry_run: true, profiles: [ProfileFactory.create_messagable], webdriver: wd).go
+      messager(dry_run: true, profiles: [messagable_profile], webdriver: wd).go
     end
   end
 
@@ -29,12 +36,12 @@ RSpec.describe Messager do
       wd = object_double(PofWebdriver::Base.new)
       expect(wd).to receive(:send_message).and_return(true)
 
-      messager(profiles: [ProfileFactory.create_messagable], webdriver: wd).go
+      messager(profiles: [messagable_profile], webdriver: wd).go
     end
   end
 
   it "messages the given profiles" do
-    profiles = [ProfileFactory.create_messagable, ProfileFactory.create_messagable]
+    profiles = [messagable_profile, messagable_profile]
 
     wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).twice.and_return(true)
@@ -45,14 +52,14 @@ RSpec.describe Messager do
   it "retries when messaging fails" do
     wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).twice.and_raise(PofWebdriver::MessageSendError)
-    messager(webdriver: wd, profiles: [ProfileFactory.create_messagable], attempts: 1).go
+    messager(webdriver: wd, profiles: [messagable_profile], attempts: 1).go
   end
 
   it "marks the profile as unavailable when messaging fails" do
     wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).at_least(:once).and_raise(PofWebdriver::MessageSendError)
 
-    p = ProfileFactory.create_messagable
+    p = messagable_profile
     messager(webdriver: wd, profiles: [p]).go
 
     p.reload

@@ -74,8 +74,8 @@ RSpec.describe Profile do
   end
 
   describe "#sent_message" do
-    let(:recipient) { ProfileFactory.create }
-    let(:sender) { ProfileFactory.create }
+    let(:recipient) { create(:profile) }
+    let(:sender) { create(:profile) }
     subject { sender.sent_message(recipient: recipient, content: "foo") }
 
     it "creates messages from Me" do
@@ -95,8 +95,8 @@ RSpec.describe Profile do
   end
 
   describe "#received_message" do
-    let(:sender) { ProfileFactory.create }
-    let(:recipient) { ProfileFactory.create }
+    let(:sender) { create(:profile) }
+    let(:recipient) { create(:profile) }
     let(:time) { Time.zone.now }
     subject { recipient.received_message(sender: sender, content: "foo", sent_at: time) }
 
@@ -115,16 +115,16 @@ RSpec.describe Profile do
 
   describe "#received?" do
     it "is true if we have received a message from the given username at the given time" do
-      me = ProfileFactory.create
-      them = ProfileFactory.create(username: "foobar")
+      me = create(:profile)
+      them = create(:profile, username: "foobar")
       m = me.received_message(sender: them, content: "foo", sent_at: Time.now)
 
       expect(me.received?(username: "foobar", sent_at: m.sent_at)).to be
     end
 
     it "is false unless a Message exists for the given username and time" do
-      me = ProfileFactory.create
-      them = ProfileFactory.create(username: "foobar")
+      me = create(:profile)
+      them = create(:profile, username: "foobar")
       m = me.received_message(sender: them, content: "foo", sent_at: Time.now)
 
       expect(me.received?(username: "not-the-same-username", sent_at: m.sent_at)).to_not be
@@ -134,14 +134,14 @@ RSpec.describe Profile do
 
   describe "#responses" do
     it "gets all messages received by me in response to messages sent by me" do
-      them = ProfileFactory.create
-      me = ProfileFactory.create
+      them = create(:profile)
+      me = create(:profile)
       me.sent_message(recipient: them, sent_at: Time.now - 60, content: "foo")
       response = me.received_message(sender: them, sent_at: Time.now - 30, content: "foo")
 
       #some controls
-      me.sent_message(recipient: ProfileFactory.create, content: "foo")
-      me.received_message(sender: ProfileFactory.create, content: "bar")
+      me.sent_message(recipient: create(:profile), content: "foo")
+      me.received_message(sender: create(:profile), content: "bar")
 
       expect(me.responses.to_a).to eq([response])
     end
