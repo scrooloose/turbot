@@ -1,11 +1,10 @@
 class PofSession
   attr_reader :webdriver, :search_pages_to_process, :messager, :dry_run, :error_email, :user
 
-  def initialize(webdriver: nil, search_pages_to_process: 3, messager: nil, dry_run: true, error_email: Config['admin_email'])
+  def initialize(webdriver: nil, search_pages_to_process: 3, messager: nil, dry_run: true)
     @webdriver = webdriver
     @search_pages_to_process = search_pages_to_process
     @dry_run = dry_run
-    @error_email = error_email
     @messager = messager || raise(ArgumentError)
   end
 
@@ -37,8 +36,7 @@ private
 
   def handle_error(e)
     if Rails.env.production?
-      body = e.message + "\n" + e.backtrace.join("\n")
-      Pony.mail(to: error_email, from: error_email, subject: 'Pofbot Error', body: body)
+      AdminMailer.error(error: e).deliver_now!
     else
       raise e
     end

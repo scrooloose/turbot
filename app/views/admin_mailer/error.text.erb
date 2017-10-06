@@ -1,0 +1,7 @@
+The following error ocurred:
+
+<%= @error.message %>
+
+<% if @error.backtrace %>
+<%= @error.backtrace.join("\n") %>
+<% end %>
