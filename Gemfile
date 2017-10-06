@@ -41,6 +41,7 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'rspec-rails', '~> 3.6'
   gem 'timecop'
+  gem 'factory_girl_rails'
 end
 
 group :development do

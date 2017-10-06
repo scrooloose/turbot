@@ -1,33 +1,35 @@
 require "rails_helper"
 
 RSpec.describe Profile do
-  let(:me) { ProfileFactory.create }
+  let(:me) { create(:profile) }
+
   describe "#messagable" do
+    before do
+      create(:topic, :likes_biking)
+    end
+
     it "returns profiles that can be messaged, and haven't been already" do
-      messaged_profile = ProfileFactory.create_messagable
+      messaged_profile = create(:profile, interests: ['biking'])
       messaged_profile.received_message(sender: me, content: "foo")
 
-      unmessagble_profile = ProfileFactory.create(interests: ['something-that-doesnt-match-anything'])
-      messagable_profile = ProfileFactory.create_messagable
+      unmessagble_profile = create(:profile, interests: ['something-that-doesnt-match-anything'])
+      messagable_profile = create(:profile, interests: ['biking'])
 
       expect(me.messagable(1).to_a).to eq([messagable_profile])
     end
 
     it "returns the number specified" do
-      ProfileFactory.create_messagable
-      ProfileFactory.create_messagable
-      ProfileFactory.create_messagable
-      me = ProfileFactory.create_messagable
+      create_list(:profile, 3, interests: ['biking'])
 
       expect(me.messagable(2).to_a.size).to eq(2)
     end
 
+    #FIXME: This test is not good and may always pass. #messagable should allow no arg to be given, which would cause all
+    #messagable profiles to be returned. This will allow us to grab ALL
+    #messagable profiles and make sure no unavailable profiles are returned.
     it "doesn't return unavailable profiles" do
-      messagable_profile = ProfileFactory.create_messagable
-
-      unavailable_profile = ProfileFactory.create_messagable
-      unavailable_profile.unavailable = true
-      unavailable_profile.save(raise_on_failure: true)
+      messagable_profile = create(:profile, interests: ['biking'])
+      create(:profile, interests: ['biking'], unavailable: true)
 
       expect(me.messagable(1).to_a).to eq([messagable_profile])
     end
@@ -35,34 +37,36 @@ RSpec.describe Profile do
 
   describe ".available" do
     it "returns profiles that aren't marked as unavailable" do
-      ProfileFactory.create(unavailable: true)
-      p = ProfileFactory.create(unavailable: false)
+      create(:profile, unavailable: true)
+      p = create(:profile, unavailable: false)
       expect(Profile.available.to_a).to match_array([p])
     end
   end
 
   describe "#matches_any_topic?" do
     it "is true if the profile matches a topic" do
-      expect(ProfileFactory.create(interests: ['biking']).matches_any_topic?).to be
+      create(:topic, :likes_biking)
+      expect(create(:profile, interests: ['biking']).matches_any_topic?).to be
     end
 
     it "is false if the profile matches no topics" do
-      expect(ProfileFactory.create(interests: ['nothing']).matches_any_topic?).to_not be
+      create(:topic, :likes_biking)
+      expect(create(:profile, interests: ['nothing']).matches_any_topic?).to_not be
     end
   end
 
   it "#name is parsed out of the profile" do
-    p = ProfileFactory.from_test_fixture('profile.html')
-    expect(p.username).to eq('misshubble2')
+    p = Profile.new(page_content: test_file_content('emma.html'))
+    expect(p.name).to eq('Emma')
   end
 
   it "#bio is parsed out of the profile" do
-    p = ProfileFactory.from_test_fixture('profile.html')
+    p = Profile.new(page_content: test_file_content('profile.html'))
     expect(p.bio).to match(/\AI'm adventurous.*me laugh\.\Z/m)
   end
 
   it "#interests are parsed out of the profile" do
-    interests = ProfileFactory.from_test_fixture('profile.html').interests
+    interests = Profile.new(page_content: test_file_content('profile.html')).interests
 
     #there are more, but this will prove the point
     expect(interests).to include('wine')
