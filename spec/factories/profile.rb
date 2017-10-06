@@ -1,3 +1,5 @@
+require Rails.root.join('spec', 'support', 'test_files_helper.rb')
+
 FactoryGirl.define do
   factory :profile do
     sequence :pof_key do |n|
@@ -28,6 +30,8 @@ FactoryGirl.define do
 end
 
 module ProfileFactoryHelper
+  extend TestFilesHelper
+
   def self.pof_page_content_for(params)
     page = Nokogiri.HTML(test_file_content('base.html'))
 
