@@ -10,7 +10,7 @@ require 'slop'
 require 'mechanize'
 
 opts = Slop.parse do |o|
-  o.banner = "Usage: TURBOT_ENV=[env-name] ./bin/pof_session_runner.rb [options]"
+  o.banner = "Usage: RAILS_ENV=[env-name] ./bin/pof_session_runner.rb [options]"
   o.separator ""
   o.separator "Required"
   o.integer "-u", "--user-id", "ID of user to act as"
