@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Profile do
-  let(:me) { create(:profile) }
+  let(:sender) { create(:profile) }
 
   describe "#messagable" do
     before do
@@ -10,18 +10,18 @@ RSpec.describe Profile do
 
     it "returns profiles that can be messaged, and haven't been already" do
       messaged_profile = create(:profile, interests: ['biking'])
-      messaged_profile.received_message(sender: me, content: "foo")
+      messaged_profile.received_message(sender: sender, content: "foo")
 
       unmessagble_profile = create(:profile, interests: ['something-that-doesnt-match-anything'])
       messagable_profile = create(:profile, interests: ['biking'])
 
-      expect(me.messagable(1).to_a).to eq([messagable_profile])
+      expect(sender.messagable(1).to_a).to eq([messagable_profile])
     end
 
     it "returns the number specified" do
       create_list(:profile, 3, interests: ['biking'])
 
-      expect(me.messagable(2).to_a.size).to eq(2)
+      expect(sender.messagable(2).to_a.size).to eq(2)
     end
 
     #FIXME: This test is not good and may always pass. #messagable should allow no arg to be given, which would cause all
@@ -31,7 +31,7 @@ RSpec.describe Profile do
       messagable_profile = create(:profile, interests: ['biking'])
       create(:profile, interests: ['biking'], unavailable: true)
 
-      expect(me.messagable(1).to_a).to eq([messagable_profile])
+      expect(sender.messagable(1).to_a).to eq([messagable_profile])
     end
   end
 
@@ -78,7 +78,7 @@ RSpec.describe Profile do
     let(:sender) { create(:profile) }
     subject { sender.sent_message(recipient: recipient, content: "foo") }
 
-    it "creates messages from Me" do
+    it "creates messages from sender" do
       expect(subject.sender_profile).to eq(sender)
     end
 
@@ -115,35 +115,35 @@ RSpec.describe Profile do
 
   describe "#received?" do
     it "is true if we have received a message from the given username at the given time" do
-      me = create(:profile)
+      sender = create(:profile)
       them = create(:profile, username: "foobar")
-      m = me.received_message(sender: them, content: "foo", sent_at: Time.now)
+      m = sender.received_message(sender: them, content: "foo", sent_at: Time.now)
 
-      expect(me.received?(username: "foobar", sent_at: m.sent_at)).to be
+      expect(sender.received?(username: "foobar", sent_at: m.sent_at)).to be
     end
 
     it "is false unless a Message exists for the given username and time" do
-      me = create(:profile)
+      sender = create(:profile)
       them = create(:profile, username: "foobar")
-      m = me.received_message(sender: them, content: "foo", sent_at: Time.now)
+      m = sender.received_message(sender: them, content: "foo", sent_at: Time.now)
 
-      expect(me.received?(username: "not-the-same-username", sent_at: m.sent_at)).to_not be
-      expect(me.received?(username: m.sender_profile.username, sent_at: m.sent_at - 1000)).to_not be
+      expect(sender.received?(username: "not-the-same-username", sent_at: m.sent_at)).to_not be
+      expect(sender.received?(username: m.sender_profile.username, sent_at: m.sent_at - 1000)).to_not be
     end
   end
 
   describe "#responses" do
-    it "gets all messages received by me in response to messages sent by me" do
+    it "gets all messages received by the sender in response to messages sent by the sender" do
       them = create(:profile)
-      me = create(:profile)
-      me.sent_message(recipient: them, sent_at: Time.now - 60, content: "foo")
-      response = me.received_message(sender: them, sent_at: Time.now - 30, content: "foo")
+      sender = create(:profile)
+      sender.sent_message(recipient: them, sent_at: Time.now - 60, content: "foo")
+      response = sender.received_message(sender: them, sent_at: Time.now - 30, content: "foo")
 
       #some controls
-      me.sent_message(recipient: create(:profile), content: "foo")
-      me.received_message(sender: create(:profile), content: "bar")
+      sender.sent_message(recipient: create(:profile), content: "foo")
+      sender.received_message(sender: create(:profile), content: "bar")
 
-      expect(me.responses.to_a).to eq([response])
+      expect(sender.responses.to_a).to eq([response])
     end
   end
 end
