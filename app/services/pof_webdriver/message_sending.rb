@@ -1,7 +1,5 @@
 module PofWebdriver::MessageSending
   def send_message(message: nil, profile: nil)
-    raise("Block real sending of messages in test. Should never see this.") if Rails.env.test?
-
     Rails.logger.info "Sending message to #{profile.username}"
     login
 
