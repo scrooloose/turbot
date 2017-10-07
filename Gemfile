@@ -65,3 +65,10 @@ gem 'slop', "> 4.0"
 
 # Used to scrape pof.com
 gem 'mechanize'
+
+#activeadmin and dependencies
+gem 'activeadmin'
+gem 'devise'
+gem 'cancancan'
+gem 'draper'
+gem 'pundit'

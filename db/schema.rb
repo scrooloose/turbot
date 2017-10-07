@@ -10,51 +10,79 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define() do
+ActiveRecord::Schema.define(version: 20171007141343) do
 
-  create_table "messages", force: :cascade do |t|
-    t.text     "content",              limit: 65535, null: false
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+  create_table "active_admin_comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "namespace"
+    t.text "body"
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.string "author_type"
+    t.bigint "author_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
+    t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
+    t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
+  end
+
+  create_table "admin_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_admin_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+  end
+
+  create_table "messages", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.datetime "sent_at"
-    t.integer  "sender_profile_id",    limit: 4
-    t.integer  "recipient_profile_id", limit: 4
+    t.integer "sender_profile_id"
+    t.integer "recipient_profile_id"
+    t.index ["recipient_profile_id"], name: "index_messages_on_recipient_profile_id"
+    t.index ["sender_profile_id"], name: "index_messages_on_sender_profile_id"
   end
 
-  add_index "messages", ["recipient_profile_id"], name: "recipient_profile_id", using: :btree
-  add_index "messages", ["sender_profile_id"], name: "sender_profile_id", using: :btree
-
-  create_table "profiles", force: :cascade do |t|
-    t.string   "pof_key",      limit: 255,                   null: false
-    t.string   "username",     limit: 255,                   null: false
-    t.text     "page_content", limit: 65535,                 null: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.boolean  "unavailable",                default: false
+  create_table "profiles", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "pof_key", null: false
+    t.string "username", null: false
+    t.text "page_content", limit: 16777215, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "unavailable", default: false
+    t.index ["pof_key"], name: "index_profiles_on_pof_key", unique: true
+    t.index ["username"], name: "index_profiles_on_username", unique: true
   end
 
-  add_index "profiles", ["pof_key"], name: "profiles_pof_key_index", unique: true, using: :btree
-  add_index "profiles", ["username"], name: "profiles_username_index", unique: true, using: :btree
-
-  create_table "topics", force: :cascade do |t|
-    t.string   "name",       limit: 255,   null: false
-    t.text     "matchers",   limit: 65535, null: false
-    t.text     "message",    limit: 65535, null: false
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+  create_table "topics", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "name", null: false
+    t.text "matchers", null: false
+    t.text "message", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_topics_on_name", unique: true
   end
 
-  add_index "topics", ["name"], name: "index_topics_on_name", unique: true, using: :btree
-
-  create_table "users", force: :cascade do |t|
-    t.string   "pof_username", limit: 255, null: false
-    t.string   "pof_password", limit: 255, null: false
-    t.string   "name",         limit: 255, null: false
-    t.integer  "profile_id",   limit: 4
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+  create_table "users", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "pof_username", null: false
+    t.string "pof_password", null: false
+    t.string "name", null: false
+    t.integer "profile_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "messages", "profiles", column: "recipient_profile_id", name: "messages_ibfk_3"
-  add_foreign_key "messages", "profiles", column: "sender_profile_id", name: "messages_ibfk_2"
+  add_foreign_key "messages", "profiles", column: "recipient_profile_id"
+  add_foreign_key "messages", "profiles", column: "sender_profile_id"
 end
