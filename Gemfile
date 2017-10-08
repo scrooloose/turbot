@@ -75,3 +75,4 @@ gem 'pundit'
 
 gem 'delayed_job'
 gem 'delayed_job_active_record'
+gem 'daemons' #required for delayedjob daemon
