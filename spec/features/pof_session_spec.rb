@@ -20,13 +20,13 @@ feature 'POF session' do
     #the first 2 messages were already in my account. The final message is the
     #one we just sent to someone
     expect(Message.all.map(&:sender_profile).map(&:username)).to match_array(
-      ["markus", "pof_user_1"]
+      ["markus", user.profile.username]
     )
 
     #the first is from markus (site admin) to us. The final message is the
     #one we just sent
     expect(Message.all.map(&:recipient_profile).map(&:username)).to match_array(
-      ["pof_user_1", "Hannie87"]
+      [user.profile.username, "Hannie87"]
     )
 
     expect(Profile.count).to eq(34)
