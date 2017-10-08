@@ -72,3 +72,6 @@ gem 'devise'
 gem 'cancancan'
 gem 'draper'
 gem 'pundit'
+
+gem 'delayed_job'
+gem 'delayed_job_active_record'
