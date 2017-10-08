@@ -12,26 +12,22 @@ class PofSession
     check_messages
     cache_profiles
     send_some_messages
+  rescue StandardError => e
+    handle_error(e)
   end
 
 private
 
   def cache_profiles
     webdriver.cache_profiles_from_search_page(num_pages: search_pages_to_process)
-  rescue StandardError => e
-    handle_error(e)
   end
 
   def send_some_messages
     messager.go
-  rescue StandardError => e
-    handle_error(e)
   end
 
   def check_messages
     webdriver.check_messages
-  rescue StandardError => e
-    handle_error(e)
   end
 
   def handle_error(e)
