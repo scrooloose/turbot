@@ -3,5 +3,5 @@ class User < ApplicationRecord
   validates :pof_password, presence: true
   validates :name, presence: true
 
-  belongs_to :profile
+  belongs_to :profile, optional: true
 end
