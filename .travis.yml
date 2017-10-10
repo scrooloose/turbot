@@ -1,0 +1,12 @@
+dist: trusty
+language: ruby
+rvm:
+  - 2.3.3
+
+services:
+  - mysql
+
+before_script:
+  - mysql -e 'create database turbot_test'
+  - "cp ./.travis.database.yml ./config/database.yml"
+  - "cp ./.travis.config.yml ./config/config.yml"

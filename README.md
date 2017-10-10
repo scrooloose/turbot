@@ -11,6 +11,8 @@
 
 Turbot is a dating bot for the [Plenty of Fish](https://www.pof.com/) dating site.
 
+[![Build Status](https://travis-ci.org/scrooloose/turbot.svg?branch=master)](https://travis-ci.org/scrooloose/turbot)
+
 Purpose
 =======
 
