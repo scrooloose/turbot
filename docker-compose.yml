@@ -1,0 +1,34 @@
+version: "2"
+
+volumes:
+  db-data:
+    external: false
+
+services:
+  db:
+    image: mysql
+    env_file: .env
+    volumes:
+      - db-data:/var/lib/mysql
+
+  app:
+    build: .
+    image: turbot:latest
+    env_file: .env
+    command: "rails server -b 0.0.0.0"
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  queue:
+    build: .
+    image: turbot:latest
+    env_file: .env
+    command: "bin/delayed_job run"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
