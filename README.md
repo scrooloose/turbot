@@ -30,35 +30,35 @@ Being single can suck, but we can program ourselves out of this hole!
 Setup
 =====
 
-**Set up the DB**
 
-Copy `config/db_example.yml` to `config/db.yml`.
-
-Create the databases and fill in the auth details.
-
-**Run the database migrations**
+Copy the config file and set it up as desired
 
 ```
-rails db:migrate
+cp config/config_exampe.yml config/config.yml
 ```
 
-**Add the default admin user**
+Next, fire up Turbot and set up the database
 
 ```
-rails db:seed
+docker-compose up
+docker-compose run --rm app rails db:setup
+
+```
+
+Load the DB seed data. This actually just adds a default admin user so you can
+log in.
+
+
+```
+docker-compose run --rm app rails db:seed
 
 ```
 
 **Set up your POF user**
 
-Fire up the rails server:
 
-```
-rails server
-```
-
-Log into ActiveAdmin, by visiting `/admin` and entering the email
-*admin@example.com* and *password*
+Log into ActiveAdmin, at `http://localhost:3000/admin` with email:
+`admin@example.com` and password: `password`
 
 
 Click 'Users' from the top nav, then click the 'New User' button. Fill in the
@@ -71,15 +71,16 @@ Note: Your profile's `Name` is used to sign the messages you send.
 This part is ugly and, at some point, there will be a pretty UI to do it.
 
 ```
-rails bootstraper:setup_profile pof_profile_id=YOUR_ID user_id=YOUR_USER_ID
+docker-compose run --rm app rails bootstrapper:setup_profile pof_profile_id=POF_ID user_id=USER_ID
 ```
 
-Replace `YOUR_ID` with the POF ID. To find this, go to your profile page and
-look at the number on the end of the url.
+Replace `POF_ID` with the your own POF ID. To find this, go to your profile
+page and look at the number on the end of the url.
 
 Example: `http://www.pof.com/viewprofile.aspx?profile_id=1234567`
 
-Replace `YOUR_USER_ID` with the ID of the user from the previous step.
+Replace `USER_ID` with the ID of the user from the previous step (almost
+certainly "1").
 
 **Create some topics**
 
@@ -100,11 +101,9 @@ Once you have your User and Topics set up, you can kick off a POF session by
 visiting your User page in ActiveAdmin and clicking "Enqueue POF Session". This
 will queue up the session in a background job.
 
-Note: You must also start the delayed job queue processor which runs the session:
+The background job processor (delayed job) should already be running from the
+`docker-compose up`.
 
-```
-./bin/delayed_job start
-```
 
 Topic Matching
 ==============
@@ -161,10 +160,9 @@ cycling too ..." could be sent to that profile.
 Todo
 ====
 
-* Dockerize the app.
 * Finish making the app multi-user. For example give each user their own set of
   Topics.
-* Clean up the Profile model a bit.
+* Clean up the Profile model - getting pretty messy and overloaded.
 * Make turbot ignore messages from POF admins.
 * Finish testing PofMessageInfoExtractor - there are a couple of untested
   methods.
