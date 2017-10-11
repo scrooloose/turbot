@@ -3,6 +3,8 @@ class Topic < ApplicationRecord
   validates :matchers, presence: true
   validates :message, presence: true
 
+  belongs_to :user
+
   def matches?(bio_fragment)
     interest_matchers.any? do |regex|
       bio_fragment.match(regex)

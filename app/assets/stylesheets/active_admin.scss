@@ -15,3 +15,11 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+
+fieldset.has_many_fields {
+  background: #eff !important;
+}
+
+fieldset.has_many_fields:nth-child(2n) {
+  background: #fff !important;
+}

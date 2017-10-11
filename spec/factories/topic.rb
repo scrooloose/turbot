@@ -11,5 +11,7 @@ FactoryGirl.define do
       matchers 'biking'
       message 'I like biking as well ...'
     end
+
+    association :user
   end
 end

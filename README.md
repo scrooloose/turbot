@@ -87,7 +87,7 @@ certainly "1").
 Now the fun part. You can create some canned messages and rules to figure out
 which profiles these can be sent to.
 
-Log into ActiveAdmin and click 'Topics' from the top nav and start creating!
+Log into ActiveAdmin and edit the user you just created and start adding topics!
 
 Read more about topics below and how they are matched to profiles.
 

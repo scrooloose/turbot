@@ -4,4 +4,7 @@ class User < ApplicationRecord
   validates :name, presence: true
 
   belongs_to :profile, optional: true
+  has_many :topics
+
+  accepts_nested_attributes_for :topics
 end

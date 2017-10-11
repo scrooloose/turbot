@@ -10,6 +10,7 @@ feature 'POF session' do
     user = create(:user, pof_username: "my_fake_username", pof_password: "my_fake_password")
 
     create(:topic,
+           user: user,
            matchers: "running",
            message: "I'm also into running. Did you run the Bristol half this year?")
 
