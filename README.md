@@ -60,11 +60,8 @@ docker-compose run --rm app rails db:seed
 Log into ActiveAdmin, at `http://localhost:3000/admin` with email:
 `admin@example.com` and password: `password`
 
-
-Click 'Users' from the top nav, then click the 'New User' button. Fill in the
-form, leaving profile blank for now, and submit.
-
-Note: Your profile's `Name` is used to sign the messages you send.
+Click 'Users' from the top nav, click the 'New User' button and fill in the
+form. Leave the topics empty for now.
 
 **Pull down your profile and associate it to your newly created user**
 
@@ -122,10 +119,12 @@ separated list. This is trivial to match against.
 The second method is more involved, but necessary since many people don't use
 the proper 'interests' section but instead put lists of interests into their
 bio section. Turbot knows how to recognise the most common of these structures.
-For example if a sentence like this is in a bio:
+For example if one of these sentences appeared in a bio:
 
 > I enjoy cycling, horse riding, card games and coffee.
+>
 > In my spare time I go cycling, horse riding, card games and coffee.
+>
 > In really enjoy cycling, horse riding, card games and coffee.
 
 Then turbot will correctly pick out 'cycling', 'horse riding', 'card games' and
