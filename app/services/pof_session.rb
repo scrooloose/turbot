@@ -1,7 +1,7 @@
 class PofSession
   attr_reader :webdriver, :search_pages_to_process, :messager, :dry_run, :error_email, :user
 
-  def initialize(webdriver: nil, search_pages_to_process: 3, messager: nil, dry_run: true)
+  def initialize(webdriver:, search_pages_to_process: 3, messager:, dry_run: true)
     @webdriver = webdriver
     @search_pages_to_process = search_pages_to_process
     @dry_run = dry_run

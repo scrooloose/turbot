@@ -3,7 +3,7 @@ class MessageBuilder
 
   attr_reader :profile, :sender_user
 
-  def initialize(profile, sender_user: nil)
+  def initialize(profile:, sender_user:)
     @profile = profile
     @sender_user = sender_user
   end

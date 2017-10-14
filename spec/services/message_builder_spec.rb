@@ -9,12 +9,12 @@ RSpec.describe MessageBuilder do
     it "opens with 'How's it going [name]?' if the profile has a name" do
       create(:topic, :likes_biking)
       p = build(:profile, name: "Jane", interests: ["biking"])
-      expect(MessageBuilder.new(p, sender_user: create(:user)).message).to start_with("How's it going Jane?")
+      expect(MessageBuilder.new(profile: p, sender_user: create(:user)).message).to start_with("How's it going Jane?")
     end
 
     it "opens with 'How's it going?' if the profile has no name" do
       p = build(:profile, name: nil, interests: ["biking"])
-      expect(MessageBuilder.new(p, sender_user: create(:user)).message).to start_with("How's it going?")
+      expect(MessageBuilder.new(profile: p, sender_user: create(:user)).message).to start_with("How's it going?")
     end
 
     it "has a body from a topic" do
@@ -22,7 +22,7 @@ RSpec.describe MessageBuilder do
 
       #just check the message mentions biking... not exactly an exhaustive test
       #but enough for now
-      expect(MessageBuilder.new(p, sender_user: create(:user)).message).to include("biking")
+      expect(MessageBuilder.new(profile: p, sender_user: create(:user)).message).to include("biking")
     end
   end
 end

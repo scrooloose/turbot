@@ -1,7 +1,7 @@
 class ProfilePageParser
   attr_reader :page_content
 
-  def initialize(page_content: nil)
+  def initialize(page_content:)
     @page_content = page_content
   end
 

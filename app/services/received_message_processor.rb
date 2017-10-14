@@ -5,7 +5,7 @@ class ReceivedMessageProcessor
     new(args).process_message
   end
 
-  def initialize(recipient: nil, username: nil, sent_at: nil, content: nil, profile_page: nil)
+  def initialize(recipient:, username:, sent_at:, content:, profile_page: nil)
     @username = username
     @sent_at = sent_at
     @content = content
