@@ -4,8 +4,9 @@ RSpec.describe ReceivedMessageProcessor do
   it "forwards .process_message onto #process_message" do
     processor_double = instance_double(ReceivedMessageProcessor)
     expect(processor_double).to receive(:process_message)
-    expect(ReceivedMessageProcessor).to receive(:new).with(username: "foo").and_return(processor_double)
-    ReceivedMessageProcessor.process_message(username: "foo")
+    args = { username: "username", recipient: "recipient", sent_at: "sent_at", content: "content" }
+    expect(ReceivedMessageProcessor).to receive(:new).with(args).and_return(processor_double)
+    ReceivedMessageProcessor.process_message(args)
   end
 
   describe "#process_message" do
