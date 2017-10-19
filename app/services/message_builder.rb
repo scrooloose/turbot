@@ -1,5 +1,5 @@
 class MessageBuilder
-  class NoMatchingTopicError < StandardError; end
+  class NoMatchingInterestError < StandardError; end
 
   attr_reader :profile, :sender_user
 
@@ -23,11 +23,19 @@ private
   end
 
   def body
-    if profile.topics.empty?
-      raise(NoMatchingTopicError, "Could not build message. No topics matched")
+    interests = profile.interests
+
+    if interests.empty?
+      raise(NoMatchingInterestError, "Could not build message. No interests matched")
     end
 
-    profile.topics.first.message.sub(/\n*$/, '')
+    template_messages = interests.map { |i| i.template_messages.find_by(user: sender_user) }.flatten.compact
+
+    if template_messages.empty?
+      raise(NoMatchingInterestError, "Could not build message. No template message matched")
+    end
+
+    template_messages.first.content.sub(/\n*$/, '')
   end
 
   def signoff

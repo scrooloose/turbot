@@ -1,13 +1,13 @@
 require "rails_helper"
 
 RSpec.describe Messager do
-  def messager(profiles: nil, **args)
+  def messager(profiles:, sender:, **args)
     opts = {
       dry_run: false,
       webdriver: object_double(PofWebdriver::Base.new),
       sleep_strategy: SleepStrategy.no_sleep,
       profile_repo: create(:profile),
-      sender: create(:user)
+      sender: sender
     }.merge(args)
 
     opts.merge!(message_count: profiles.count) if profiles
@@ -16,18 +16,18 @@ RSpec.describe Messager do
   end
 
   before do
-    create(:topic, :likes_biking)
-  end
-
-  def messagable_profile
-    create(:profile, interests: ['biking'])
+    @sender = create(:user)
+    @biking = create(:interest, :biking)
+    @sender.template_messages << create(:template_message, interest: @biking)
+    @messagable_profile = create(:profile, pof_interests: ['biking'])
+    @messagable_profile2 = create(:profile, pof_interests: ['biking'])
   end
 
   context "when dry_run is true" do
     it "doesn't send messages" do
       wd = object_double(PofWebdriver::Base.new)
       expect(wd).to_not receive(:send_message)
-      messager(dry_run: true, profiles: [messagable_profile], webdriver: wd).go
+      messager(dry_run: true, profiles: [@messagable_profile], sender: @sender, webdriver: wd).go
     end
   end
 
@@ -36,33 +36,31 @@ RSpec.describe Messager do
       wd = object_double(PofWebdriver::Base.new)
       expect(wd).to receive(:send_message).and_return(true)
 
-      messager(profiles: [messagable_profile], webdriver: wd).go
+      messager(profiles: [@messagable_profile], sender: @sender, webdriver: wd).go
     end
   end
 
   it "messages the given profiles" do
-    profiles = [messagable_profile, messagable_profile]
+    profiles = [@messagable_profile, @messagable_profile2]
 
     wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).twice.and_return(true)
 
-    messager(profiles: profiles, webdriver: wd, message_count: 2).go
+    messager(profiles: profiles, sender: @sender, webdriver: wd, message_count: 2).go
   end
 
   it "retries when messaging fails" do
     wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).twice.and_raise(PofWebdriver::MessageSendError)
-    messager(webdriver: wd, profiles: [messagable_profile], attempts: 1).go
+    messager(webdriver: wd, profiles: [@messagable_profile], sender: @sender, attempts: 1).go
   end
 
   it "marks the profile as unavailable when messaging fails" do
     wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).at_least(:once).and_raise(PofWebdriver::MessageSendError)
 
-    p = messagable_profile
-    messager(webdriver: wd, profiles: [p]).go
+    messager(webdriver: wd, profiles: [@messagable_profile], sender: @sender).go
 
-    p.reload
-    expect(p.unavailable).to be
+    expect(@messagable_profile.reload.unavailable).to be
   end
 end

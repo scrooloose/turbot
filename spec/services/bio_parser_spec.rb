@@ -1,22 +1,22 @@
 require "rails_helper"
 
-RSpec.describe MessageBuilder do
-  describe "#topics" do
-    def test_likes(bio: nil, topics: nil, all_topics: topics)
-      bp = BioParser.new(bio: bio, topics: all_topics)
-      expect(bp.matching_topics).to eq(topics)
+RSpec.describe BioParser do
+  describe "#interests" do
+    def test_likes(bio: nil, interests: nil, all_interests: interests)
+      bp = BioParser.new(bio: bio, interests: all_interests)
+      expect(bp.matching_interests).to eq(interests)
     end
 
-    let :biking_topic do
-      biking_topic = build(:topic, name: "biking", matchers: "biking\ncycling", message: "foo")
+    let :biking_interest do
+      biking_interest = build(:interest, name: "biking", matchers: "biking\ncycling")
     end
 
-    let :control_topic do
-      control_topic = build(:topic, name: "xxx", matchers: 'yyy', message: "zzz")
+    let :control_interest do
+      control_interest = build(:interest, name: "xxx", matchers: 'yyy')
     end
 
     it "recognizes interest matchers in 'like sentences'" do
-      args = { topics: [biking_topic], all_topics: [biking_topic, control_topic]  }
+      args = { interests: [biking_interest], all_interests: [biking_interest, control_interest]  }
 
       test_likes(args.merge(bio: "I like biking and football"))
       test_likes(args.merge(bio: "Love cycling and try to get away for weekends as often as possible."))
@@ -32,16 +32,16 @@ RSpec.describe MessageBuilder do
     end
 
     pending "doesn't recognize anti-interests" do
-      bp = BioParser.new(bio: "I hate biking and football", topics: [biking_topic])
-      expect(bp.matching_topics).to be_empty
+      bp = BioParser.new(bio: "I hate biking and football", interests: [biking_interest])
+      expect(bp.matching_interests).to be_empty
 
-      bp = BioParser.new(bio: "I don't really like biking and football", topics: [biking_topic])
-      expect(bp.matching_topics).to be_empty
+      bp = BioParser.new(bio: "I don't really like biking and football", interests: [biking_interest])
+      expect(bp.matching_interests).to be_empty
     end
 
     it "only checks 5 words into a sentence" do
-      bp = BioParser.new(bio: "one two three four five I like to do the usual watch films and biking", topics: [biking_topic])
-      expect(bp.matching_topics).to be_empty
+      bp = BioParser.new(bio: "one two three four five I like to do the usual watch films and biking", interests: [biking_interest])
+      expect(bp.matching_interests).to be_empty
     end
 
     def test_like_list(list_intro: 'I like:', list_prefix: '', should_match: true)
@@ -57,12 +57,12 @@ RSpec.describe MessageBuilder do
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
         no sea takimata sanctus est Lorem ipsum dolor sit amet.
       EOS
-      bp = BioParser.new(bio: bio, topics: [biking_topic])
+      bp = BioParser.new(bio: bio, interests: [biking_interest])
 
       if should_match
-        expect(bp.matching_topics).to include(biking_topic)
+        expect(bp.matching_interests).to include(biking_interest)
       else
-        expect(bp.matching_topics).not_to include(biking_topic)
+        expect(bp.matching_interests).not_to include(biking_interest)
       end
     end
 
@@ -113,10 +113,10 @@ RSpec.describe MessageBuilder do
         horses
         blarg
       EOS
-      horse_topic = build(:topic, name: "horse topic", matchers: 'horses', message: "foo")
-      bp = BioParser.new(bio: bio, topics: [biking_topic, horse_topic])
+      horse_interest = build(:interest, name: "horse interest", matchers: 'horses')
+      bp = BioParser.new(bio: bio, interests: [biking_interest, horse_interest])
 
-      expect(bp.matching_topics).to match_array([biking_topic, horse_topic])
+      expect(bp.matching_interests).to match_array([biking_interest, horse_interest])
     end
 
     it "accepts up to 2 new lines after the list intro" do

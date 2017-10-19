@@ -58,6 +58,13 @@ ActiveRecord::Schema.define(version: 20171014194623) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "interests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.text "matchers"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "messages", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.text "content", null: false
     t.datetime "created_at", null: false
@@ -80,15 +87,13 @@ ActiveRecord::Schema.define(version: 20171014194623) do
     t.index ["username"], name: "index_profiles_on_username", unique: true
   end
 
-  create_table "topics", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
-    t.string "name", null: false
-    t.text "matchers", null: false
-    t.text "message", null: false
+  create_table "template_messages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.text "content", null: false
+    t.integer "interest_id"
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
-    t.index ["name"], name: "index_topics_on_name", unique: true
-    t.index ["user_id"], name: "index_topics_on_user_id"
+    t.index ["interest_id"], name: "index_template_messages_on_interest_id"
   end
 
   create_table "users", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|

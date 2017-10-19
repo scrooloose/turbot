@@ -18,7 +18,7 @@ class Profile < ApplicationRecord
     rv = []
     self.class.unmessaged(id).excluding(self.id).order('RAND()').find_in_batches(batch_size: 500) do |batch|
       batch.each do |profile|
-        rv << profile if profile.matches_any_topic?
+        rv << profile if profile.matches_any_interest?
         return rv if rv.size == number
       end
     end
@@ -36,9 +36,9 @@ class Profile < ApplicationRecord
   end
 
   #TODO: these should all be readonly, but are read/write for easier testing
-  attr_writer :bio, :name, :topics
+  attr_writer :bio, :name, :pof_interests
 
-  DerivedFields=[:bio, :name, :topics, :interests]
+  DerivedFields=[:bio, :name, :interests, :pof_interests]
 
   DerivedFields.each do |property|
     define_method(property) do
@@ -49,14 +49,14 @@ class Profile < ApplicationRecord
 
   def has_interest_matching?(regexs)
     regexs.detect do |regex|
-      if interests.detect {|i| i =~ regex}
+      if pof_interests.detect {|i| i =~ regex}
         return true
       end
     end
   end
 
-  def matches_any_topic?
-    topics_for_interests(interests).any?
+  def matches_any_interest?
+    interests_for_pof_interests(interests).any?
   end
 
   def reload
@@ -108,11 +108,11 @@ private
 
     @bio ||= profile_page_parser.bio
     @name ||= profile_page_parser.name
-    @interests ||= profile_page_parser.interests
-    @topics ||= topics_for_interests(@interests) + bio_parser.topics
+    @pof_interests ||= profile_page_parser.interests
+    @interests ||= interests_for_pof_interests(@pof_interests) + bio_parser.interests
   end
 
-  def topics_for_interests(interests)
-    interests.map {|i| Topic.matching(i)}.compact.flatten.to_set
+  def interests_for_pof_interests(interests)
+    pof_interests.map {|i| Interest.matching(i)}.compact.flatten.to_set
   end
 end

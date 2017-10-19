@@ -1,21 +1,21 @@
 class BioParser
-  attr_reader :bio, :topics
+  attr_reader :bio, :interests
 
-  def initialize(bio:, topics: Topic.all)
+  def initialize(bio:, interests: Interest.all)
     @bio = bio
-    @topics = topics
+    @interests = interests
   end
 
-  def matching_topics
-    matching_topics = []
+  def matching_interests
+    matching_interests = []
 
     (like_sentences + like_lists).each do |fragment|
-      matching_topics = matching_topics + topics.select do |topic|
-        topic.matches?(fragment)
+      matching_interests = matching_interests + interests.select do |interest|
+        interest.matches?(fragment)
       end
     end
 
-    matching_topics.uniq
+    matching_interests.uniq
   end
 
 private

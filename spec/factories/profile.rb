@@ -11,13 +11,13 @@ FactoryGirl.define do
     end
 
     transient do
-      interests []
+      pof_interests []
     end
 
     page_content do |evaluator|
       unless evaluator.attributes["page_content"]
         ProfileFactoryHelper.pof_page_content_for(
-          evaluator.attributes.merge(interests: evaluator.interests).symbolize_keys
+          evaluator.attributes.merge(pof_interests: evaluator.pof_interests).symbolize_keys
         )
       end
     end
@@ -35,7 +35,7 @@ module ProfileFactoryHelper
   def self.pof_page_content_for(params)
     page = Nokogiri.HTML(test_file_content('base.html'))
 
-    params[:interests]&.each do |interest|
+    params[:pof_interests]&.each do |interest|
       new_interest = %Q(<li class="text-lg"><a href="/interests/#{interest}">#{interest}</a></li>)
       page.at_css('#profile-interests-wrapper .nav') << new_interest
     end
