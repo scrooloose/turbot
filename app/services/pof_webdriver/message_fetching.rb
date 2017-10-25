@@ -7,12 +7,12 @@ module PofWebdriver::MessageFetching
 
 private
   def goto_inbox
-    Rails.logger.info "#{self.class.name}: goto_inbox"
+    Rails.logger.debug "#{self.class.name}: goto_inbox"
     visit("inbox.aspx")
   end
 
   def check_for_responses(inbox_page)
-    Rails.logger.info "#{self.class.name}: check_for_responses"
+    Rails.logger.debug "#{self.class.name}: check_for_responses"
     messages = inbox_page.search(".inbox-message-wrapper")
 
     messages.each do |message|
@@ -28,9 +28,9 @@ private
           recipient: user.profile
         )
       rescue StandardError => e
-        Rails.logger.info ".process_message failed for message content: #{message}"
-        Rails.logger.info e.message
-        Rails.logger.info e.backtrace
+        Rails.logger.debug ".process_message failed for message content: #{message}"
+        Rails.logger.debug e.message
+        Rails.logger.debug e.backtrace
         next
       end
 

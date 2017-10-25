@@ -29,7 +29,7 @@ protected
     return visit('') if @logged_in
     @logged_in ||= true
 
-    Rails.logger.info "#{self.class.name}: Logging in"
+    Rails.logger.debug "#{self.class.name}: Logging in"
     login_page = visit('')
     login_form = login_page.form('frmLogin')
     login_form.username = user.pof_username

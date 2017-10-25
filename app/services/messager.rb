@@ -14,7 +14,7 @@ class Messager
   def go
     profiles.each do |profile|
       msg_text = MessageBuilder.new(profile: profile, sender_user: sender).message
-      Rails.logger.info("Messenger#go - Sending message to #{profile.username}. Message: #{msg_text}")
+      Rails.logger.debug("Messenger#go - Sending message to #{profile.username}. Message: #{msg_text}")
       attempt_to_send(msg_text, profile)
       sleep_strategy.sleep
     end

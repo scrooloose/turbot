@@ -14,7 +14,7 @@ class ReceivedMessageProcessor
   end
 
   def process_message
-    Rails.logger.info "#{self.class.name}: processing message from #{username} at #{sent_at}"
+    Rails.logger.debug "#{self.class.name}: processing message from #{username} at #{sent_at}"
 
     unless recipient.received?(username: username, sent_at: sent_at)
       recipient.received_message(sender: sender_profile, content: content, sent_at: sent_at)

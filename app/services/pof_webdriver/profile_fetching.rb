@@ -21,7 +21,7 @@ private
   end
 
   def cache_profiles(page)
-    Rails.logger.info "#{self.class.name} - caching for: #{page.uri.to_s}"
+    Rails.logger.debug "#{self.class.name} - caching for: #{page.uri.to_s}"
     profile_links = page.links_with(href: /^viewprofile.*/, class: 'link')
     profile_links.each do |link|
 
@@ -34,13 +34,13 @@ private
   end
 
   def cache_profile(page)
-    Rails.logger.info "#{self.class.name} - caching: #{page.uri.to_s}"
+    Rails.logger.debug "#{self.class.name} - caching: #{page.uri.to_s}"
     begin
       profile_cacher.cache(page.body)
     rescue StandardError => e
-      Rails.logger.info ".cache_profile failed for profile page: #{page.body}"
-      Rails.logger.info e.message
-      Rails.logger.info e.backtrace
+      Rails.logger.debug ".cache_profile failed for profile page: #{page.body}"
+      Rails.logger.debug e.message
+      Rails.logger.debug e.backtrace
     end
   end
 
