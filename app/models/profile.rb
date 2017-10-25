@@ -39,23 +39,9 @@ class Profile < ApplicationRecord
                          sent_msgs.sent_at < messages.sent_at)")
   end
 
-  def has_interest_matching?(regexs)
-    regexs.detect do |regex|
-      if pof_interests.detect {|i| i =~ regex}
-        return true
-      end
-    end
-  end
-
   def make_unavailable!
     self.unavailable = true
     save(raise_on_failure: true)
-  end
-
-  def inspect
-    a = attributes.clone
-    a["page_content"] = a["page_content"].first(20) + " ..."
-    "#<#{self.class.name} @attributes=#{a}>"
   end
 
   def sent_message(recipient: nil, content: nil, sent_at: Time.now)
