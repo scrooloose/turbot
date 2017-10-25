@@ -1,18 +1,18 @@
 require "rails_helper"
 
 RSpec.describe BioParser do
-  describe "#interests" do
+  describe "#interests", focus: true do
     def test_likes(bio: nil, interests: nil, all_interests: interests)
       bp = BioParser.new(bio: bio, interests: all_interests)
       expect(bp.matching_interests).to eq(interests)
     end
 
     let :biking_interest do
-      biking_interest = build(:interest, name: "biking", matchers: "biking\ncycling")
+      build(:interest, name: "biking", matchers: "biking\ncycling")
     end
 
     let :control_interest do
-      control_interest = build(:interest, name: "xxx", matchers: 'yyy')
+      build(:interest, name: "xxx", matchers: 'yyy')
     end
 
     it "recognizes interest matchers in 'like sentences'" do

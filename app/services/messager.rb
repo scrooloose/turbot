@@ -22,7 +22,7 @@ class Messager
 
 private
   def profiles
-    @profiles ||= profile_repo.messagable(message_count)
+    @profiles ||= profile_repo.messagable(number: message_count, interests: sender.interests)
   end
 
   def attempt_to_send(msg, profile)

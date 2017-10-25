@@ -9,10 +9,11 @@ feature 'POF session' do
     #NOTE: I search/replaced the tape here to remove the real auth
     user = create(:user, pof_username: "my_fake_username", pof_password: "my_fake_password")
 
-    running = create(:interest, matchers: "running")
+    running = create(:interest, matchers: "running", name: "Running")
 
     create(:template_message,
            user: user,
+           interest: running,
            content: "I'm also into running. Did you run the Bristol half this year?")
 
     VCR.use_cassette "pof_session" do

@@ -10,17 +10,7 @@ FactoryGirl.define do
       "pof_user_#{n}"
     end
 
-    transient do
-      pof_interests []
-    end
-
-    page_content do |evaluator|
-      unless evaluator.attributes["page_content"]
-        ProfileFactoryHelper.pof_page_content_for(
-          evaluator.attributes.merge(pof_interests: evaluator.pof_interests).symbolize_keys
-        )
-      end
-    end
+    page_content "the page content"
 
     trait :emma do
       pof_key "82945044"

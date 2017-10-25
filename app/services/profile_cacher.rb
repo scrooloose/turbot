@@ -17,7 +17,8 @@ class ProfileCacher
                 Profile.new(username: parser.username, pof_key: parser.pof_key)
               end
     profile.page_content = profile_page_body
-    profile.save
+    profile.parse_page_contents!
+    profile.save!
     profile
   end
 end

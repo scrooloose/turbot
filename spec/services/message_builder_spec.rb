@@ -5,21 +5,21 @@ RSpec.describe MessageBuilder do
     before do
       @biking = create(:interest, :biking)
       @sender = create(:user)
-      @template_message = create(:template_message, :biking, user: @sender)
+      @template_message = create(:template_message, interest: @biking, user: @sender, content: "I like biking")
     end
 
     it "opens with 'How's it going [name]?' if the profile has a name" do
-      p = build(:profile, name: "Jane", pof_interests: ["biking"])
+      p = build(:profile, name: "Jane", interests: [@biking])
       expect(MessageBuilder.new(profile: p, sender_user: @sender).message).to start_with("How's it going Jane?")
     end
 
     it "opens with 'How's it going?' if the profile has no name" do
-      p = build(:profile, name: nil, pof_interests: ["biking"])
+      p = build(:profile, name: nil, interests: [@biking])
       expect(MessageBuilder.new(profile: p, sender_user: @sender).message).to start_with("How's it going?")
     end
 
-    it "has a body from a topic" do
-      p = build(:profile, pof_interests: ["biking"])
+    it "has a body from a template message" do
+      p = build(:profile, interests: [@biking])
 
       #just check the message mentions biking... not exactly an exhaustive test
       #but enough for now

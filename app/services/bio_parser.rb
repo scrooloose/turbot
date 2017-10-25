@@ -1,24 +1,20 @@
 class BioParser
-  attr_reader :bio, :interests
-
   def initialize(bio:, interests: Interest.all)
     @bio = bio
     @interests = interests
   end
 
   def matching_interests
-    matching_interests = []
-
-    (like_sentences + like_lists).each do |fragment|
-      matching_interests = matching_interests + interests.select do |interest|
+    (like_sentences + like_lists).map do |fragment|
+      interests.select do |interest|
         interest.matches?(fragment)
       end
-    end
-
-    matching_interests.uniq
+    end.flatten.uniq
   end
 
 private
+
+  attr_reader :bio, :interests
 
   def like_phrases_regex
     '\blikes?|loves?|enjoy|am happiest|am happy|hobbies|passion|i\'?m into|i am into|really into|spare time'

@@ -12,13 +12,17 @@ class Profile < ApplicationRecord
   has_many :sent_messages, class_name: "Message", foreign_key: "sender_profile_id"
   has_many :received_messages, class_name: "Message", foreign_key: "recipient_profile_id"
 
+  has_many :profile_interests
+  has_many :interests, through: :profile_interests
+
   has_one :user
 
-  def messagable(number)
+  #FIXME: this can now be rewritten MUCH more efficiently using ProfileInterests
+  def messagable(number:, interests:)
     rv = []
     self.class.unmessaged(id).excluding(self.id).order('RAND()').find_in_batches(batch_size: 500) do |batch|
       batch.each do |profile|
-        rv << profile if profile.matches_any_interest?
+        rv << profile if (profile.interests.to_a & interests.to_a).any?
         return rv if rv.size == number
       end
     end
@@ -35,35 +39,12 @@ class Profile < ApplicationRecord
                          sent_msgs.sent_at < messages.sent_at)")
   end
 
-  #TODO: these should all be readonly, but are read/write for easier testing
-  attr_writer :bio, :name, :pof_interests
-
-  DerivedFields=[:bio, :name, :interests, :pof_interests]
-
-  DerivedFields.each do |property|
-    define_method(property) do
-      parse_page_contents
-      instance_variable_get("@#{property}")
-    end
-  end
-
   def has_interest_matching?(regexs)
     regexs.detect do |regex|
       if pof_interests.detect {|i| i =~ regex}
         return true
       end
     end
-  end
-
-  def matches_any_interest?
-    interests_for_pof_interests(interests).any?
-  end
-
-  def reload
-    super
-    clear_derived_fields
-    parse_page_contents
-    self
   end
 
   def make_unavailable!
@@ -89,30 +70,19 @@ class Profile < ApplicationRecord
     received_messages.joins(:sender_profile).where("profiles.username = ?", username).where("messages.sent_at" => sent_at).any?
   end
 
-private
-
-  def clear_derived_fields
-    DerivedFields.each do |f|
-      vname = "@#{f}".to_sym
-      remove_instance_variable(vname) if instance_variable_defined?(vname)
-    end
-    @parse_page_contents_done = false
-  end
-
-  def parse_page_contents
-    return if @parse_page_contents_done
-    @parse_page_contents_done = true
-
+  def parse_page_contents!
     profile_page_parser = ProfilePageParser.new(page_content: page_content)
     bio_parser = BioParser.new(bio: profile_page_parser.bio)
 
-    @bio ||= profile_page_parser.bio
-    @name ||= profile_page_parser.name
-    @pof_interests ||= profile_page_parser.interests
-    @interests ||= interests_for_pof_interests(@pof_interests) + bio_parser.interests
+    self.bio = profile_page_parser.bio
+    self.name = profile_page_parser.name
+    self.interests = (interests_for_pof_interests(profile_page_parser.interests) + bio_parser.matching_interests).uniq
+    self
   end
 
-  def interests_for_pof_interests(interests)
-    pof_interests.map {|i| Interest.matching(i)}.compact.flatten.to_set
+private
+
+  def interests_for_pof_interests(pof_interests)
+    pof_interests.map {|i| Interest.matching(i)}.compact.flatten.uniq
   end
 end

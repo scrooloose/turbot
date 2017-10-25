@@ -19,8 +19,8 @@ RSpec.describe Messager do
     @sender = create(:user)
     @biking = create(:interest, :biking)
     @sender.template_messages << create(:template_message, interest: @biking)
-    @messagable_profile = create(:profile, pof_interests: ['biking'])
-    @messagable_profile2 = create(:profile, pof_interests: ['biking'])
+    @messagable_profile = create(:profile, interests: [@biking])
+    @messagable_profile2 = create(:profile, interests: [@biking])
   end
 
   context "when dry_run is true" do
