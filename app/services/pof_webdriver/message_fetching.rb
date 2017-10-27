@@ -19,20 +19,13 @@ private
 
       extractor = PofMessageInfoExtractor.new(message, agent)
 
-      begin
-        message_processor.perform(
-          username: extractor.username,
-          sent_at: extractor.sent_at,
-          content: extractor.message_content,
-          profile_page: extractor.profile_page_content,
-          recipient: user.profile
-        )
-      rescue StandardError => e
-        Rails.logger.debug ".process_message failed for message content: #{message}"
-        Rails.logger.debug e.message
-        Rails.logger.debug e.backtrace
-        next
-      end
+      message_processor.perform(
+        username: extractor.username,
+        sent_at: extractor.sent_at,
+        content: extractor.message_content,
+        profile_page: extractor.profile_page_content,
+        recipient: user.profile
+      )
 
       wait_between_actions
     end
