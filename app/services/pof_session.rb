@@ -5,7 +5,7 @@ class PofSession
     @webdriver = webdriver
     @search_pages_to_process = search_pages_to_process
     @dry_run = dry_run
-    @messager = messager || raise(ArgumentError)
+    @messager = messager
   end
 
   def run
