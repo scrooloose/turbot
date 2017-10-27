@@ -12,8 +12,8 @@ class PofSession
     check_messages
     cache_profiles
     send_some_messages
-  rescue StandardError => e
-    handle_error(e)
+  #rescue StandardError => e
+    #handle_error(e)
   end
 
 private
@@ -23,7 +23,7 @@ private
   end
 
   def send_some_messages
-    messager.go
+    messager.perform
   end
 
   def check_messages

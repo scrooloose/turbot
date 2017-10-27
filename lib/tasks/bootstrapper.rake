@@ -6,7 +6,7 @@ namespace :bootstrapper do
 
     require 'net/http'
     page = Net::HTTP.get('www.pof.com', "/viewprofile.aspx?profile_id=#{pof_profile_id}")
-    profile = ProfileCacher.new(page).cache
+    profile = ProfileCacher.new(page).perform
     User.find(user_id).update(profile_id: profile.id)
   end
 end

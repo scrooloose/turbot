@@ -1,8 +1,8 @@
 class ReceivedMessageProcessor
   attr_reader :username, :sent_at, :content, :profile_page, :recipient
 
-  def self.process_message(**args)
-    new(args).process_message
+  def self.perform(**args)
+    new(args).perform
   end
 
   def initialize(recipient:, username:, sent_at:, content:, profile_page: nil)
@@ -13,7 +13,7 @@ class ReceivedMessageProcessor
     @recipient = recipient
   end
 
-  def process_message
+  def perform
     Rails.logger.debug "#{self.class.name}: processing message from #{username} at #{sent_at}"
 
     unless recipient.received?(username: username, sent_at: sent_at)
@@ -28,6 +28,6 @@ private
       return profile
     end
 
-    ProfileCacher.new(profile_page).cache
+    ProfileCacher.new(profile_page).perform
   end
 end

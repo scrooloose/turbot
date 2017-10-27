@@ -20,7 +20,7 @@ private
       extractor = PofMessageInfoExtractor.new(message, agent)
 
       begin
-        message_processor.process_message(
+        message_processor.perform(
           username: extractor.username,
           sent_at: extractor.sent_at,
           content: extractor.message_content,

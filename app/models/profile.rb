@@ -58,11 +58,11 @@ class Profile < ApplicationRecord
 
   def parse_page_contents!
     profile_page_parser = ProfilePageParser.new(page_content: page_content)
-    bio_parser = BioParser.new(bio: profile_page_parser.bio)
+    interests_extractor = InterestsExtractor.new(bio: profile_page_parser.bio)
 
     self.bio = profile_page_parser.bio
     self.name = profile_page_parser.name
-    self.interests = (interests_for_pof_interests(profile_page_parser.interests) + bio_parser.matching_interests).uniq
+    self.interests = (interests_for_pof_interests(profile_page_parser.interests) + interests_extractor.perform).uniq
     self
   end
 

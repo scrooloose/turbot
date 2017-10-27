@@ -27,7 +27,7 @@ RSpec.describe Messager do
     it "doesn't send messages" do
       wd = object_double(PofWebdriver::Base.new)
       expect(wd).to_not receive(:send_message)
-      messager(dry_run: true, profiles: [@messagable_profile], sender: @sender, webdriver: wd).go
+      messager(dry_run: true, profiles: [@messagable_profile], sender: @sender, webdriver: wd).perform
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe Messager do
       wd = object_double(PofWebdriver::Base.new)
       expect(wd).to receive(:send_message).and_return(true)
 
-      messager(profiles: [@messagable_profile], sender: @sender, webdriver: wd).go
+      messager(profiles: [@messagable_profile], sender: @sender, webdriver: wd).perform
     end
   end
 
@@ -46,20 +46,20 @@ RSpec.describe Messager do
     wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).twice.and_return(true)
 
-    messager(profiles: profiles, sender: @sender, webdriver: wd, message_count: 2).go
+    messager(profiles: profiles, sender: @sender, webdriver: wd, message_count: 2).perform
   end
 
   it "retries when messaging fails" do
     wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).twice.and_raise(PofWebdriver::MessageSendError)
-    messager(webdriver: wd, profiles: [@messagable_profile], sender: @sender, attempts: 1).go
+    messager(webdriver: wd, profiles: [@messagable_profile], sender: @sender, attempts: 1).perform
   end
 
   it "marks the profile as unavailable when messaging fails" do
     wd = object_double(PofWebdriver::Base.new)
     expect(wd).to receive(:send_message).at_least(:once).and_raise(PofWebdriver::MessageSendError)
 
-    messager(webdriver: wd, profiles: [@messagable_profile], sender: @sender).go
+    messager(webdriver: wd, profiles: [@messagable_profile], sender: @sender).perform
 
     expect(@messagable_profile.reload.unavailable).to be
   end

@@ -36,7 +36,7 @@ private
   def cache_profile(page)
     Rails.logger.debug "#{self.class.name} - caching: #{page.uri.to_s}"
     begin
-      profile_cacher.cache(page.body)
+      profile_cacher.perform(page.body)
     rescue StandardError => e
       Rails.logger.debug ".cache_profile failed for profile page: #{page.body}"
       Rails.logger.debug e.message

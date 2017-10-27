@@ -1,32 +1,32 @@
 require "rails_helper"
 
 RSpec.describe ReceivedMessageProcessor do
-  it "forwards .process_message onto #process_message" do
-    processor_double = instance_double(ReceivedMessageProcessor)
-    expect(processor_double).to receive(:process_message)
+  it "forwards .perform onto #perform" do
+    processor_double = instance_double(described_class)
+    expect(processor_double).to receive(:perform)
     args = { username: "username", recipient: "recipient", sent_at: "sent_at", content: "content" }
-    expect(ReceivedMessageProcessor).to receive(:new).with(args).and_return(processor_double)
-    ReceivedMessageProcessor.process_message(args)
+    expect(described_class).to receive(:new).with(args).and_return(processor_double)
+    described_class.perform(args)
   end
 
-  describe "#process_message" do
+  describe "#perform" do
     it "ignores previously processed messages" do
       sender = create(:profile)
       receiver = create(:profile)
       message = sender.sent_message(recipient: receiver, content: "foo")
-      ReceivedMessageProcessor.new(recipient: receiver, username: sender.username, sent_at: message.sent_at, content: "foo").process_message
+      described_class.new(recipient: receiver, username: sender.username, sent_at: message.sent_at, content: "foo").perform
     end
 
     context "when processing new messages" do
       it "saves the message" do
         expect {
-          ReceivedMessageProcessor.new(
+          described_class.new(
             recipient: create(:profile),
             username: "foo",
             sent_at: Time.now,
             content: "foo",
             profile_page: test_file_content('emma.html')
-          ).process_message
+          ).perform
         }.to change(Message, :count).by(1)
 
       end
@@ -35,13 +35,13 @@ RSpec.describe ReceivedMessageProcessor do
         recipient = create(:profile)
 
         expect {
-          ReceivedMessageProcessor.new(
+          described_class.new(
             recipient: recipient,
             username: "foo",
             sent_at: Time.now,
             content: "foo",
             profile_page: test_file_content('emma.html')
-          ).process_message
+          ).perform
         }.to change(Profile, :count).by(1)
       end
 
@@ -50,13 +50,13 @@ RSpec.describe ReceivedMessageProcessor do
         recipient = create(:profile)
 
         expect {
-          ReceivedMessageProcessor.new(
+          described_class.new(
             recipient: recipient,
             username: "foo",
             sent_at: Time.now,
             content: "foo",
             profile_page: test_file_content('emma.html')
-          ).process_message
+          ).perform
         }.to_not change(Profile, :count)
       end
     end

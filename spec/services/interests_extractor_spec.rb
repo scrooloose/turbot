@@ -1,10 +1,10 @@
 require "rails_helper"
 
-RSpec.describe BioParser do
+RSpec.describe InterestsExtractor do
   describe "#interests", focus: true do
     def test_likes(bio: nil, interests: nil, all_interests: interests)
-      bp = BioParser.new(bio: bio, interests: all_interests)
-      expect(bp.matching_interests).to eq(interests)
+      bp = described_class.new(bio: bio, interests: all_interests)
+      expect(bp.perform).to eq(interests)
     end
 
     let :biking_interest do
@@ -32,16 +32,16 @@ RSpec.describe BioParser do
     end
 
     pending "doesn't recognize anti-interests" do
-      bp = BioParser.new(bio: "I hate biking and football", interests: [biking_interest])
-      expect(bp.matching_interests).to be_empty
+      bp = described_class.new(bio: "I hate biking and football", interests: [biking_interest])
+      expect(bp.perform).to be_empty
 
-      bp = BioParser.new(bio: "I don't really like biking and football", interests: [biking_interest])
-      expect(bp.matching_interests).to be_empty
+      bp = described_class.new(bio: "I don't really like biking and football", interests: [biking_interest])
+      expect(bp.perform).to be_empty
     end
 
     it "only checks 5 words into a sentence" do
-      bp = BioParser.new(bio: "one two three four five I like to do the usual watch films and biking", interests: [biking_interest])
-      expect(bp.matching_interests).to be_empty
+      bp = described_class.new(bio: "one two three four five I like to do the usual watch films and biking", interests: [biking_interest])
+      expect(bp.perform).to be_empty
     end
 
     def test_like_list(list_intro: 'I like:', list_prefix: '', should_match: true)
@@ -57,12 +57,12 @@ RSpec.describe BioParser do
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
         no sea takimata sanctus est Lorem ipsum dolor sit amet.
       EOS
-      bp = BioParser.new(bio: bio, interests: [biking_interest])
+      bp = described_class.new(bio: bio, interests: [biking_interest])
 
       if should_match
-        expect(bp.matching_interests).to include(biking_interest)
+        expect(bp.perform).to include(biking_interest)
       else
-        expect(bp.matching_interests).not_to include(biking_interest)
+        expect(bp.perform).not_to include(biking_interest)
       end
     end
 
@@ -114,9 +114,9 @@ RSpec.describe BioParser do
         blarg
       EOS
       horse_interest = build(:interest, name: "horse interest", matchers: 'horses')
-      bp = BioParser.new(bio: bio, interests: [biking_interest, horse_interest])
+      bp = described_class.new(bio: bio, interests: [biking_interest, horse_interest])
 
-      expect(bp.matching_interests).to match_array([biking_interest, horse_interest])
+      expect(bp.perform).to match_array([biking_interest, horse_interest])
     end
 
     it "accepts up to 2 new lines after the list intro" do

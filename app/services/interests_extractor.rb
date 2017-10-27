@@ -1,10 +1,10 @@
-class BioParser
+class InterestsExtractor
   def initialize(bio:, interests: Interest.all)
     @bio = bio
     @interests = interests
   end
 
-  def matching_interests
+  def perform
     (like_sentences + like_lists).map do |fragment|
       interests.select do |interest|
         interest.matches?(fragment)

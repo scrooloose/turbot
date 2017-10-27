@@ -8,7 +8,7 @@ class MessageBuilder
     @sender_user = sender_user
   end
 
-  def message
+  def perform
     "#{greeting} #{body}\n#{signoff}"
   end
 
