@@ -23,6 +23,10 @@ services:
     depends_on:
       - db
 
+    #to allow byebug
+    tty: true
+    stdin_open: true
+
   queue:
     build: .
     image: turbot:latest

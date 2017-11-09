@@ -1,0 +1,23 @@
+<% if flash[:alert] %>
+  <section class="alert alert-warning">
+    <div class="container">
+      <div class="col-12">
+        <p>
+          <%= flash[:alert] %>
+        </p>
+      </div>
+    </div>
+  </section>
+<% end %>
+
+<% if flash[:notice] %>
+  <section class="alert alert-success">
+    <div class="container">
+      <div class="col-12">
+        <p>
+          <%= flash[:notice] %>
+        </p>
+      </div>
+    </div>
+  </section>
+<% end %>

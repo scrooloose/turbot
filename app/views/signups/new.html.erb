@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row">
+    <h1>Register</h1>
+  </div>
+
+  <%= errors_for(@user) %>
+
+  <div class="row">
+    <%= simple_form_for @user, url: signups_path, wrapper: :vertical_form do |f| %>
+
+      <b>Account details</b>
+      <%= f.input :email %>
+      <%= f.input :password %>
+
+      <br>
+      <hr>
+      <br>
+
+      <b>POF account details</b>
+      <%= f.input :pof_username %>
+      <%= f.input :pof_password, as: :string %>
+      <%= f.input :name %>
+
+      <%= f.submit "Sign Up", class: "btn btn-default" %>
+
+    <% end %>
+  </div>
+</div>

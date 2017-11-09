@@ -1,0 +1,23 @@
+<div class="row">
+  <%= simple_form_for(
+    @template_message_setup_form,
+    url: template_message_setups_path,
+    wrapper: :horizontal_form,
+    html: { class: "form-horizontal" } ) do |f| %>
+
+    <%= f.input :step, as: :hidden, input_html: { value: 2, name: "step" } %>
+    <% @template_message_setup_form.interests.each_with_index do |interest, idx| %>
+      <%= hidden_field_tag "template_message_setup_form[messages][#{idx}][interest_id]", interest.id %>
+      <%= f.input :messages,
+        as: :text,
+        label: "Message for #{interest.name}",
+        input_html: { name: "template_message_setup_form[messages][#{idx}][message]", id: "message-#{interest.id}" } %>
+    <% end %>
+
+    <hr>
+
+    <%= f.input " " do %>
+      <%= f.button :button, "Save Messages" %>
+    <% end %>
+  <% end %>
+</div>

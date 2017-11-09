@@ -1,0 +1,32 @@
+<div class="row">
+  <%= simple_form_for(
+    @template_message_setup_form, url: template_message_setups_path,
+    html: { class: '' } ) do |f| %>
+
+    <% @interests.in_groups_of(2) do |interest_group| %>
+      <div class="row">
+        <% interest_group.compact.each do |interest| %>
+          <div class="col-sm-4 col-sm-offset-2">
+            <%= f.input " " do %>
+              <label>
+                <%= f.check_box :interest_ids,
+                  { name: 'template_message_setup_form[interest_ids][]',
+                    checked: @template_message_setup_form.has_interest?(interest.id) },
+                  interest.id, nil %>
+                <%= interest.name %>
+              </label>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <hr>
+
+    <%= f.input " " do %>
+      <div class="col-sm-offset-2">
+        <%= f.button :submit, "Step 2: Write your messages" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

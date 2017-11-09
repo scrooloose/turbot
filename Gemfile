@@ -76,3 +76,7 @@ gem 'pundit'
 gem 'delayed_job'
 gem 'delayed_job_active_record'
 gem 'daemons' #required for delayedjob daemon
+
+gem 'sorcery'
+gem 'bootstrap-sass', '~> 3.3.6'
+gem 'simple_form'
