@@ -7,7 +7,9 @@ feature 'Registration' do
     create(:interest, :cooking)
 
 
-    visit "/register"
+    visit "/"
+    click_link "Sign Up"
+
     fill_in "Email", with: "new-user@bar.com"
     fill_in "Password", with: "foobar"
     fill_in "Pof username", with: "foo"
