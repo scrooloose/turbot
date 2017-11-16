@@ -13,10 +13,9 @@ class TemplateMessageSetupsController < ApplicationController
 
     if final_step?
       @template_message_setup_form.save
-      redirect_to dashboards_path, notice: "Message config saved"
-    else
-      redirect_to new_template_message_setup_path(step: @step + 1)
     end
+
+    redirect_to new_template_message_setup_path(step: @step + 1)
   end
 
 private
@@ -29,6 +28,10 @@ private
   def show_step_2
     @step_title = "Enter Your Messages"
     @interests = Interest.all
+  end
+
+  def show_step_3
+    @step_title = "Well Done!"
   end
 
   def set_step

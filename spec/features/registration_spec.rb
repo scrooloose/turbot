@@ -25,7 +25,7 @@ feature 'Registration' do
     fill_in "Message for Biking", with: "Biking is rad!"
     click_button "Save Messages"
 
-    force_capybara_to_wait_for_page_to_load
+    expect(page).to have_content("Well Done!")
 
     user = User.last
     expect(user.email).to eq("new-user@bar.com")
