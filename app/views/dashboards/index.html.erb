@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2 text-center">
+      <h2>
+        Turbot has sent <%= "20" %> messages
+      </h2>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 10px; margin-bottom: 20px">
+    <div class="col-sm-2 col-sm-offset-5 text-center">
+      <%= image_tag "logo.png", class: "img-responsive" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 text-center">
+      <input type="checkbox" name="my-checkbox" checked>
+    </div>
+  </div>
+</div>
+
+<script charset="utf-8">
+  $("[name='my-checkbox']").bootstrapSwitch();
+</script>
