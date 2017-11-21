@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171027155145) do
+ActiveRecord::Schema.define(version: 20171120141214) do
 
   create_table "active_admin_comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "namespace"
@@ -98,11 +98,12 @@ ActiveRecord::Schema.define(version: 20171027155145) do
   end
 
   create_table "template_messages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.text "content", null: false
-    t.integer "interest_id"
-    t.integer "user_id"
+    t.text "content"
+    t.integer "interest_id", null: false
+    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "state"
     t.index ["interest_id"], name: "index_template_messages_on_interest_id"
   end
 

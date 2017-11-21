@@ -8,3 +8,10 @@
 def force_capybara_to_wait_for_page_to_load
   expect(page).to have_content("")
 end
+
+def login(user, password: "foobar")
+  visit login_url
+  fill_in "Email", with: user.email
+  fill_in "Password", with: password
+  click_button "Login"
+end

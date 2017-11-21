@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-3">
+      <ul class="nav navbar navbar-default navbar-fixed-side">
+        <li><%= link_to "Interests", edit_setting_path("interests") %></li>
+        <li><%= link_to "Messages", edit_setting_path("messages") %></li>
+      </ul>
+    </div>
+
+    <div class="col-sm-8 col-sm-offset-1">
+      <%= render "edit_#{params[:id]}" %>
+    </div>
+  </div>
+
+</div>
+

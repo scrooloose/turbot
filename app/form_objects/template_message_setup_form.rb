@@ -23,7 +23,7 @@ class TemplateMessageSetupForm
   def save
     ActiveRecord::Base.transaction do
       user = User.find(user_id)
-      user.template_messages.clear
+      user.template_messages.destroy_all
       interest_map.each do |interest_id, message|
         user.template_messages.create!(interest_id: interest_id, content: message)
       end

@@ -1,0 +1,23 @@
+<%= simple_form_for :interests, url: setting_path(:messages), method: :put do |f| %>
+  <div class="row">
+    <% @template_messages.each_with_index do |template_message, idx| %>
+      <div class="col-sm-8">
+        <%= hidden_field_tag "messages[#{idx}][interest_id]", template_message.interest.id %>
+        <%= f.input :messages,
+          as: :text,
+          label: "Message for #{template_message.interest.name}",
+          input_html: {
+            name: "messages[#{idx}][message]",
+            id: "message-#{template_message.interest.id}",
+            value: template_message.content
+          } %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <%= f.button :submit, "Save" %>
+    </div>
+  </div>
+<% end %>

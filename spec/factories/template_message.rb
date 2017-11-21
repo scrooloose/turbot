@@ -7,6 +7,10 @@ FactoryGirl.define do
       association :interest, :biking
     end
 
+    trait :disabled do
+      state TemplateMessage::STATE_DISABLED
+    end
+
     association :user
     association :interest
   end

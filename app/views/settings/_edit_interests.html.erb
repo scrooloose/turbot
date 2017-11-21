@@ -1,0 +1,25 @@
+<%= simple_form_for :interests, url: setting_path(:interests), method: :put do |f| %>
+  <% @interests.in_groups_of(2) do |interest_group| %>
+    <div class="row">
+      <% interest_group.compact.each do |interest| %>
+        <div class="col-sm-4">
+          <%= f.input " " do %>
+            <label>
+              <%= f.check_box :interest_id,
+                { name: 'interest_ids[]',
+                  checked: current_user.active_interests.include?(interest) },
+                interest.id, nil %>
+            <%= interest.name %>
+            </label>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <%= f.button :submit, "Save" %>
+    </div>
+  </div>
+<% end %>

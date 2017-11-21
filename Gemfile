@@ -80,3 +80,4 @@ gem 'daemons' #required for delayedjob daemon
 gem 'sorcery'
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'simple_form'
+gem 'aasm'

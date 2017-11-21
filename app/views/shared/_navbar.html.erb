@@ -7,9 +7,8 @@
     </ul>
 
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="#">Settings</a></li>
+      <li><%= link_to "Settings", edit_setting_path("interests") %></li>
       <li><%= link_to "Logout", logout_path, method: 'post' %></li>
-
     </ul>
   </div>
 </nav>
